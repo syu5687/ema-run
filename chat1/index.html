@@ -3,54 +3,69 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ihg Best Match | フォーム→チャットボット化（v3.5 送信ガード：未選択で進まない）</title>
+  <title>Ihg Best Match | フォーム→チャットボット化（v3.6 衝突回避ネームスペース＋開閉完全修復）</title>
   <link rel="icon" href="data:,">
   <style>
-	:root{--teal:#0e7490;--hdr:#083344;--blue:#2563eb;}
+	:root{--ihgcb-teal:#0e7490;--ihgcb-hdr:#083344;--ihgcb-blue:#2563eb;}
 	body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",Helvetica,Arial,sans-serif;}
 
-	.chat-launcher{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:var(--teal);color:#fff;border-radius:12px;padding:12px 16px;box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:2147483000;cursor:pointer;min-width:320px}
-	.chat-launcher .chev{margin-left:6px;transition:transform .2s ease}
-	.chat-launcher[aria-expanded="true"] .chev{transform:rotate(180deg)}
-	@media(max-width:640px){.chat-launcher{left:0;right:0;bottom:0;transform:none;border-radius:0;justify-content:center;min-width:unset;width:100%}}
+	/* ==== ランチャー（IDスコープ） ==== */
+	#ihgcb-launcher{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:var(--ihgcb-teal);color:#fff;border-radius:12px;padding:12px 16px;box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:2147483000;cursor:pointer;min-width:320px;width:fit-content;pointer-events:auto}
+	#ihgcb-launcher .ihgcb-chev{margin-left:6px;transition:transform .2s ease}
+	#ihgcb-launcher[aria-expanded="true"] .ihgcb-chev{transform:rotate(180deg)}
+	@media(max-width:640px){#ihgcb-launcher{left:0;right:0;bottom:0;transform:none;border-radius:0;justify-content:center;min-width:unset;width:100%}}
 
-	.chat{position:fixed;right:20px;bottom:96px;width:min(420px,calc(100vw - 40px));height:70vh;max-height:620px;border-radius:16px;background:#fff;box-shadow:0 20px 40px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;z-index:2147483001;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(18px) scale(.98);transition:transform .28s,opacity .18s,visibility 0s linear .18s}
-	.chat.open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
-	@media(max-width:640px){.chat{right:0;left:0;bottom:0;top:0;width:100vw;height:100vh;max-height:none;border-radius:0;transform:translateY(100%)}.chat.open{transform:translateY(0)}}
+	/* ==== チャットウィンドウ（IDスコープで他サイトCSSと衝突しない） ==== */
+	#ihgcb-box{position:fixed;right:20px;bottom:96px;width:min(420px,calc(100vw - 40px));height:70vh;max-height:620px;border-radius:16px;background:#fff;box-shadow:0 20px 40px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;z-index:2147483001;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(18px) scale(.98);transition:transform .28s,opacity .18s,visibility 0s linear .18s}
+	#ihgcb-box.open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+	@media(max-width:640px){#ihgcb-box{right:0;left:0;bottom:0;top:0;width:100vw;height:100vh;max-height:none;border-radius:0;transform:translateY(100%)}#ihgcb-box.open{transform:translateY(0)}}
 
-	.chat-header{padding:14px 16px;background:var(--hdr);color:#fff;display:flex;justify-content:space-between;align-items:center}
-	.chat-body{padding:12px;gap:8px;display:flex;flex-direction:column;overflow-y:auto;background:#f8fafc}
-	.sys,.user{max-width:86%;padding:10px 12px;border-radius:14px;font-size:14px;white-space:pre-wrap}
-	.sys{background:#e2f0f6;align-self:flex-start}
-	.user{background:#fff;align-self:flex-end;border:1px solid #e5e7eb}
-	.chat-footer{padding:10px;display:grid;grid-template-columns:1fr auto;gap:8px;background:#fff}
-	.chat-footer input{padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px}
-	.chat-footer button{padding:10px 14px;border:0;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer}
+	#ihgcb-box .ihgcb-header{padding:14px 16px;background:var(--ihgcb-hdr);color:#fff;display:flex;justify-content:space-between;align-items:center}
+	#ihgcb-box .ihgcb-body{padding:12px;gap:8px;display:flex;flex-direction:column;overflow-y:auto;background:#f8fafc}
+	#ihgcb-box .ihgcb-sys,#ihgcb-box .ihgcb-user{max-width:86%;padding:10px 12px;border-radius:14px;font-size:14px;white-space:pre-wrap}
+	#ihgcb-box .ihgcb-sys{background:#e2f0f6;align-self:flex-start}
+	#ihgcb-box .ihgcb-user{background:#fff;align-self:flex-end;border:1px solid #e5e7eb}
 
-	.choices{display:flex;flex-wrap:wrap;gap:6px 8px}
-	.pill{padding:6px 12px;font-size:14px;border:1px solid #cbd5e1;border-radius:20px;background:#fff;cursor:pointer}
-	.pill.selected{background:var(--teal);color:#fff;border-color:var(--teal)}
-	.pill.disabled{opacity:.5;pointer-events:none}
-	.confirm{border:1px solid var(--blue);background:#fff;color:var(--blue)}
-	.confirm.active{background:var(--blue);color:#fff;border-color:var(--blue);animation:pulse 1s ease-in-out infinite}
-	@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.5)}50%{box-shadow:0 0 0 8px rgba(37,99,235,0)}}
+	#ihgcb-box .ihgcb-footer{padding:10px;display:grid;grid-template-columns:1fr auto;gap:8px;background:#fff}
+	#ihgcb-input{padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px}
+	#ihgcb-send{padding:10px 14px;border:0;border-radius:10px;background:var(--ihgcb-teal);color:#fff;cursor:pointer}
 
-	.loading{position:absolute;inset:0;background:rgba(255,255,255,.85);display:none;align-items:center;justify-content:center;z-index:10}
-	.loading.active{display:flex}
-	.spinner{width:48px;height:48px;border:4px solid var(--teal);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
-	@keyframes spin{to{transform:rotate(360deg)}}
+	/* 選択肢 */
+	#ihgcb-box .ihgcb-choices{display:flex;flex-wrap:wrap;gap:6px 8px}
+	#ihgcb-box .ihgcb-pill{padding:6px 12px;font-size:14px;border:1px solid #cbd5e1;border-radius:20px;background:#fff;cursor:pointer}
+	#ihgcb-box .ihgcb-pill.selected{background:var(--ihgcb-teal);color:#fff;border-color:var(--ihgcb-teal)}
+	#ihgcb-box .ihgcb-pill.disabled{opacity:.5;pointer-events:none}
+	#ihgcb-box .ihgcb-confirm{border:1px solid var(--ihgcb-blue);background:#fff;color:var(--ihgcb-blue)}
+	#ihgcb-box .ihgcb-confirm.active{background:var(--ihgcb-blue);color:#fff;border-color:var(--ihgcb-blue);animation:ihgcb-pulse 1s ease-in-out infinite}
+	@keyframes ihgcb-pulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.5)}50%{box-shadow:0 0 0 8px rgba(37,99,235,0)}}
+
+	/* スピナー */
+	#ihgcb-box .ihgcb-loading{position:absolute;inset:0;background:rgba(255,255,255,.85);display:none;align-items:center;justify-content:center;z-index:10}
+	#ihgcb-box .ihgcb-loading.active{display:flex}
+	#ihgcb-box .ihgcb-spinner{width:48px;height:48px;border:4px solid var(--ihgcb-teal);border-top-color:transparent;border-radius:50%;animation:ihgcb-spin 1s linear infinite}
+	@keyframes ihgcb-spin{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
-  <div class="chat-launcher" id="launcher" role="button" tabindex="0" aria-controls="chatBox" aria-expanded="false"><span>💬 ご相談チャット</span><span class="chev">▴</span></div>
-  <section class="chat" id="chatBox" role="dialog" aria-hidden="true">
-	<div class="chat-header"><span>ご相談チャット</span><button id="closeBtn">×</button></div>
-	<div class="chat-body" id="chat"></div>
-	<div class="chat-footer"><input id="textInput" placeholder="ここに入力…" /><button id="sendBtn">送信</button></div>
-	<div class="loading" id="loading"><div class="spinner"></div></div>
+  <!-- ランチャー（インライン起動も装備） -->
+  <div id="ihgcb-launcher" role="button" tabindex="0" aria-controls="ihgcb-box" aria-expanded="false" onclick="window.ihgcb_toggle && window.ihgcb_toggle()">
+	<span>💬 ご相談チャット</span><span class="ihgcb-chev">▴</span>
+  </div>
+
+  <!-- チャット本体（完全ネームスペース） -->
+  <section id="ihgcb-box" role="dialog" aria-hidden="true">
+	<div class="ihgcb-header"><span>ご相談チャット</span><button id="ihgcb-close" aria-label="閉じる">×</button></div>
+	<div class="ihgcb-body" id="ihgcb-chat"></div>
+	<div class="ihgcb-footer"><input id="ihgcb-input" placeholder="ここに入力…" /><button id="ihgcb-send">送信</button></div>
+	<div class="ihgcb-loading" id="ihgcb-loading"><div class="ihgcb-spinner"></div></div>
   </section>
+
 <script>
 (function(){
+  // ===== 設定 =====
+  const THANKS_URL = (()=>{ try{ const u=new URL(location.href); return u.searchParams.get('thanks') || 'thanks.html'; }catch(_){ return 'thanks.html'; } })();
+
+  // ===== フロー =====
   const FLOW=[
 	{ key:'visited_before', label:'当館にお越しいただいたことはありますか？', type:'singleChoice', options:['なし','ある（結婚式）','ある（宴会）'] },
 	{ key:'tour_status', label:'式場見学状況は？', type:'singleChoice', options:['初めて','2式場目','3式場目','4式場以上'] },
@@ -70,115 +85,105 @@
 	{ key:'visit_2nd', label:'来館希望日（第2希望）をカレンダーから選択してください', type:'date', required:true }
   ];
 
+  // ===== 参照（全部ネームスペースID） =====
+  const launcher=document.getElementById('ihgcb-launcher');
+  const box=document.getElementById('ihgcb-box');
+  const chat=document.getElementById('ihgcb-chat');
+  const input=document.getElementById('ihgcb-input');
+  const send=document.getElementById('ihgcb-send');
+  const closeBtn=document.getElementById('ihgcb-close');
+  const loading=document.getElementById('ihgcb-loading');
+
   const state={step:0,answers:{},started:false,confirming:false};
-  const chat=document.getElementById('chat');
-  const textInput=document.getElementById('textInput');
-  const sendBtn=document.getElementById('sendBtn');
-  const widget=document.getElementById('chatBox');
-  const launcher=document.getElementById('launcher');
-  const closeBtn=document.getElementById('closeBtn');
-  const loading=document.getElementById('loading');
-
-  // サンクスページURL（デフォルト: 同ディレクトリのthanks.html）。?thanks= で上書き可能
-  const THANKS_URL = (()=>{ try{ const u=new URL(location.href); return u.searchParams.get('thanks') || 'thanks.html'; }catch(_){ return 'thanks.html'; } })();
-
-  function bubble(txt,who='sys'){const d=document.createElement('div');d.className=who;d.textContent=txt;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
   const todayISO=()=>new Date().toISOString().slice(0,10);
+  function bubble(txt,who='ihgcb-sys'){const d=document.createElement('div');d.className=who;d.textContent=txt;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
 
+  // ===== UI: 選択肢 =====
   function renderChoices(q){
-	const wrap=document.createElement('div');wrap.className='sys choices';wrap.dataset.step=state.step;
+	const wrap=document.createElement('div');wrap.className='ihgcb-sys ihgcb-choices';wrap.dataset.step=state.step;
 	if(q.type==='singleChoice'){
-	  q.options.forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='pill';b.textContent=opt;b.addEventListener('click',()=>{disableChoices(wrap);handleAnswer(opt);});wrap.appendChild(b)});
-	} else {
+	  q.options.forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='ihgcb-pill';b.textContent=opt;b.addEventListener('click',()=>{disableChoices(wrap);handleAnswer(opt);});wrap.appendChild(b)});
+	}else{ // multi
 	  const selected=new Set();
-	  q.options.forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='pill';b.textContent=opt;b.addEventListener('click',()=>{b.classList.toggle('selected');b.classList.contains('selected')?selected.add(opt):selected.delete(opt);updateConfirm();});wrap.appendChild(b)});
-	  const ok=document.createElement('button');ok.type='button';ok.className='pill confirm';ok.textContent='選択を確定';
+	  q.options.forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='ihgcb-pill';b.textContent=opt;b.addEventListener('click',()=>{b.classList.toggle('selected');b.classList.contains('selected')?selected.add(opt):selected.delete(opt);updateConfirm();});wrap.appendChild(b)});
+	  const ok=document.createElement('button');ok.type='button';ok.className='ihgcb-pill ihgcb-confirm';ok.textContent='選択を確定';
 	  function updateConfirm(){const n=selected.size;if(n>0){ok.classList.add('active');ok.textContent=`選択を確定（${n}）`;}else{ok.classList.remove('active');ok.textContent='選択を確定';}}
-	  ok.addEventListener('click',()=>{disableChoices(wrap);handleAnswer(Array.from(selected));});wrap.appendChild(ok);
+	  ok.addEventListener('click',()=>{disableChoices(wrap);handleAnswer(Array.from(selected));});
+	  wrap.appendChild(ok);
 	}
 	chat.appendChild(wrap);chat.scrollTop=chat.scrollHeight;
   }
   function disableChoices(wrap){wrap.querySelectorAll('button').forEach(b=>b.classList.add('disabled'));}
 
+  // ===== 進行 =====
   function ask(){
-	if(state.step>=FLOW.length){return finish();}
+	if(state.step>=FLOW.length){return confirmBeforeSend();}
 	const q=FLOW[state.step];
 	bubble(`Q${state.step+1}：${q.label}`);
+
 	if(q.type==='singleChoice'||q.type==='multiChoice'){
 	  renderChoices(q);
-	  // ボタン選択形式は送信ボタンで進めない
-	  sendBtn.disabled = true;
-	  textInput.type='text'; textInput.value='';
+	  send.disabled=true; // 未選択で進まない
+	  input.type='text'; input.value='';
 	}else{
-	  // 入力形式のみ送信ボタンで進める
-	  sendBtn.disabled = false;
-	  if(q.type==='date'){textInput.type='date';textInput.min=todayISO();textInput.value=todayISO();}
-	  else if(q.type==='email'){textInput.type='email';textInput.value='';}
-	  else if(q.type==='tel'){textInput.type='tel';textInput.value='';}
-	  else{textInput.type='text';textInput.value='';}
-	  textInput.focus();
+	  send.disabled=false;
+	  if(q.type==='date'){input.type='date';input.min=todayISO();input.value=todayISO();}
+	  else if(q.type==='email'){input.type='email';input.value='';}
+	  else if(q.type==='tel'){input.type='tel';input.value='';}
+	  else{input.type='text';input.value='';}
+	  input.focus();
 	}
   }
 
   function handleAnswer(val){
 	const q=FLOW[state.step];
-	// ボタン選択形式で未選択(=sendBtnから呼ばれた)は無視
-	if(val===undefined && (q.type==='singleChoice' || q.type==='multiChoice')){
-	  bubble('選択肢をお選びください');
-	  return;
-	}
-	const raw=(val!==undefined)?val:(textInput.value||'').trim();
-	if(q.required){
-	  if(Array.isArray(raw)?raw.length===0:!raw){bubble('必須入力です');return;}
-	}
-	bubble(Array.isArray(raw)?raw.join('、'):raw,'user');
-	state.answers[q.key]=raw;state.step++;
+	if(val===undefined && (q.type==='singleChoice'||q.type==='multiChoice')){ bubble('選択肢をお選びください'); return; }
+	const raw=(val!==undefined)?val:(input.value||'').trim();
+	if(q.required){ if(Array.isArray(raw)?raw.length===0:!raw){ bubble('必須入力です'); return; } }
+	bubble(Array.isArray(raw)?raw.join('、'):raw,'ihgcb-user');
+	state.answers[q.key]=raw; state.step++;
 	loading.classList.add('active');
-	setTimeout(()=>{loading.classList.remove('active');
-	  if(state.step>=FLOW.length){confirmBeforeSend();}
-	  else{ask();}
-	},500);
-  }
-	bubble(Array.isArray(raw)?raw.join('、'):raw,'user');
-	state.answers[q.key]=raw;state.step++;
-	loading.classList.add('active');
-	setTimeout(()=>{loading.classList.remove('active');
-	  if(state.step>=FLOW.length){confirmBeforeSend();}
-	  else{ask();}
-	},500);
+	setTimeout(()=>{ loading.classList.remove('active'); ask(); },500);
   }
 
   function confirmBeforeSend(){
-	if(state.confirming) return;
-	state.confirming=true;
+	if(state.confirming) return; state.confirming=true;
 	bubble('この内容で送信してもよろしいですか？');
-	const wrap=document.createElement('div');wrap.className='sys choices';
-	const b=document.createElement('button');b.type='button';b.className='pill';b.textContent='はい';
-	b.addEventListener('click',()=>{disableChoices(wrap);finish();});
-	wrap.appendChild(b);
-	chat.appendChild(wrap);chat.scrollTop=chat.scrollHeight;
+	const wrap=document.createElement('div');wrap.className='ihgcb-sys ihgcb-choices';
+	const b=document.createElement('button');b.type='button';b.className='ihgcb-pill';b.textContent='はい';
+	b.addEventListener('click',()=>{disableChoices(wrap); finish();});
+	wrap.appendChild(b); chat.appendChild(wrap); chat.scrollTop=chat.scrollHeight;
   }
 
   function finish(){
 	loading.classList.add('active');
-	setTimeout(()=>{
-	  loading.classList.remove('active');
-	  bubble('この内容で送信します');
-	  setTimeout(()=>{ window.location.href = THANKS_URL; }, 900);
-	},800);
+	setTimeout(()=>{ loading.classList.remove('active'); bubble('この内容で送信します'); setTimeout(()=>{ location.href=THANKS_URL; },900); },800);
   }
 
+  // ===== 開閉（公開 & フォールバック多数） =====
   let toggleBusy=false;
-  function openWidget(){widget.classList.add('open');launcher.setAttribute('aria-expanded','true');widget.setAttribute('aria-hidden','false');if(!state.started){state.started=true;bubble('ご相談ありがとうございます！いくつかの質問にお答えください。');ask();}}
-  function closeWidget(){widget.classList.remove('open');launcher.setAttribute('aria-expanded','false');widget.setAttribute('aria-hidden','true');}
-  function toggleWidget(){if(toggleBusy) return;toggleBusy=true;setTimeout(()=>toggleBusy=false,200);widget.classList.contains('open')?closeWidget():openWidget();}
+  function openBox(){ box.classList.add('open'); launcher.setAttribute('aria-expanded','true'); box.setAttribute('aria-hidden','false'); if(!state.started){ state.started=true; bubble('ご相談ありがとうございます！いくつかの質問にお答えください。'); ask(); } }
+  function closeBox(){ box.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); box.setAttribute('aria-hidden','true'); }
+  function toggle(){ try{ if(toggleBusy) return; toggleBusy=true; setTimeout(()=>toggleBusy=false,200); box.classList.contains('open')? closeBox(): openBox(); } catch(e){ try{ openBox(); }catch(_){} } }
 
-  launcher.onclick=toggleWidget;
-  closeBtn.onclick=closeWidget;
-  sendBtn.onclick=()=>handleAnswer();
-  document.addEventListener('keydown',e=>{if(e.key==='Escape') closeWidget();});
+  // 直接バインド
+  launcher.onclick = toggle;
+  closeBtn.onclick = closeBox;
+  send.onclick = ()=>handleAnswer();
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeBox(); });
 
-  closeWidget();
+  // ドキュメント委譲
+  document.addEventListener('click',function(e){ const t=e.target && (e.target.id==='ihgcb-launcher'? e.target : (e.target.closest && e.target.closest('#ihgcb-launcher'))); if(t){ toggle(); } },{passive:true});
+  document.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ') && document.activeElement && document.activeElement.id==='ihgcb-launcher'){ e.preventDefault(); toggle(); } });
+
+  // グローバル公開（インライン起動用）
+  window.ihgcb_toggle = toggle;
+
+  // ランチャーDOMが差し替えられても再バインド
+  new MutationObserver(()=>{ const ln=document.getElementById('ihgcb-launcher'); if(ln && !ln.onclick){ ln.onclick=toggle; } }).observe(document.body,{childList:true,subtree:true});
+
+  // 初期は閉じる
+  closeBox();
 })();
 </script>
 </body>
