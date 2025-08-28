@@ -3,27 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ihg Best Match | フォーム→チャットボット化（v1.4 レスポンシブ＆開閉）</title>
-  <!-- build: v1.4 2025-08-28T13:40Z mk | 変更点: 開閉できるランチャーバー/PC・SPレスポンシブ、SPは開いたら全画面 -->
+  <title>Ihg Best Match | フォーム→チャットボット化（v1.6 初期は閉じた状態・再開可）</title>
   <style>
 	:root{
-	  --teal:#14919b; /* ランチャーバー色 */
+	  --teal:#14919b;
 	  --teal-dark:#0f6f78;
 	  --header:#083344;
 	}
 	body { font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",Helvetica,Arial,sans-serif; }
 
-	/* ===== ランチャーバー ===== */
-	.chat-launcher-bar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:var(--teal);color:#fff;border-radius:10px;padding:12px 16px;box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:2147483640;cursor:pointer;min-width:320px;width:fit-content;pointer-events:auto;}
+	.chat-launcher-bar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:var(--teal);color:#fff;border-radius:10px;padding:12px 16px;box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:2147483640;cursor:pointer;min-width:320px;width:fit-content;}
 	.chat-launcher-bar .icon{font-size:20px;line-height:1}
 	.chat-launcher-bar .label{font-weight:600;letter-spacing:.02em}
-	.chat-launcher-bar .chev{margin-left:6px;opacity:.9;transition:transform .2s ease;display:inline-block} .chat-launcher-bar[aria-expanded="true"] .chev{transform:rotate(180deg);} 
-	.chat-launcher-bar:active{transform:translateX(-50%) scale(.98)}
+	.chat-launcher-bar .chev{margin-left:6px;opacity:.9;transition:transform .2s ease;display:inline-block}
+	.chat-launcher-bar[aria-expanded="true"] .chev{transform:rotate(180deg);}
 	@media (max-width:640px){
 	  .chat-launcher-bar{left:0;right:0;bottom:0;transform:none;border-radius:0;justify-content:center;width:100%;padding:14px 18px;}
 	}
 
-	/* ===== チャットウィジェット ===== */
 	.chat-widget{position:fixed;right:20px;bottom:96px;width:min(420px, calc(100vw - 40px));height:70vh;max-height:620px;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,.25);background:#fff;display:none;flex-direction:column;overflow:hidden;z-index:2147483001;}
 	.chat-widget.open{display:flex}
 	.chat-header{padding:14px 16px;background:var(--header);color:#fff;display:flex;align-items:center;justify-content:space-between}
@@ -41,7 +38,6 @@
 	.loading-spinner{width:48px;height:48px;border:4px solid var(--teal);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
 	@keyframes spin{to{transform:rotate(360deg)}}
 
-	/* 選択肢ピル（v1.1の青から戻せます。ここではv1.1準拠） */
 	.choices{display:flex;flex-wrap:wrap;gap:6px 8px}
 	.pill{display:inline-block;margin:4px 0 0 0;padding:6px 12px;font-size:14px;border:1px solid #cbd5e1;border-radius:20px;background:#fff;cursor:pointer}
 	.pill.selected{background:#2563eb;color:#fff;border-color:#2563eb}
@@ -49,15 +45,14 @@
 	.confirm-pill.active{background:#2563eb;color:#fff;border-color:#2563eb;animation:pulse 1s ease-in-out infinite}
 	@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.55)}50%{box-shadow:0 0 0 8px rgba(37,99,235,0)}}
 
-	/* SP：開いたら全画面 */
 	@media (max-width:640px){
 	  .chat-widget{right:0;bottom:0;left:0;top:0;width:100vw;height:100vh;max-height:none;border-radius:0}
 	}
   </style>
+<link rel="icon" href="data:,">
 </head>
 <body>
-  <!-- ランチャーバー（PC=中央下/ SP=下部全幅） -->
-  <div class="chat-launcher-bar" id="launcherBar" role="button" tabindex="0" aria-controls="chatWidget" aria-expanded="false" onclick="window.toggleWidget && window.toggleWidget()">
+  <div class="chat-launcher-bar" id="launcherBar" role="button" tabindex="0" aria-controls="chatWidget" aria-expanded="false">
 	<span class="icon">💬</span>
 	<span class="label">ご相談チャット</span>
 	<span class="chev">▴</span>
@@ -75,7 +70,6 @@
 
   <script>
   (function(){
-	// ====== v1.4：フロー（v1.3ベース。season_fixed削除済） ======
 	const FLOW = [
 	  { key: 'visited_before', label: '当館にお越しいただいたことはありますか？', type: 'singleChoice', options: ['なし','ある（結婚式）','ある（宴会）'] },
 	  { key: 'tour_status', label: '式場見学状況は？', type: 'singleChoice', options: ['初めて','2式場目','3式場目','4式場以上'] },
@@ -96,7 +90,6 @@
 	  { key: 'consent', label: '個人情報保護方針に同意いただけますか？「同意します」と入力してください。', type: 'consent', required:true }
 	];
 
-	// ===== 要素と状態 =====
 	const widget=document.getElementById('chatWidget');
 	const launcher=document.getElementById('launcherBar');
 	const closeBtn=document.getElementById('chatClose');
@@ -105,15 +98,6 @@
 	const sendBtn=document.getElementById('sendBtn');
 	const overlay=document.getElementById('loadingOverlay');
 	const state={step:0,answers:{},busy:false,started:false};
-
-	// ランチャーと閉じる
-	function openWidget(){ widget.classList.add('open'); launcher.setAttribute('aria-expanded','true'); if(!state.started){ start(); } } }
-	function closeWidget(){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }
-	launcher.addEventListener('click',()=>{ widget.classList.contains('open')? closeWidget(): openWidget(); });
-	closeBtn.addEventListener('click',closeWidget);
-	document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeWidget(); });
-	function toggleWidget(){ widget.classList.contains('open')? closeWidget(): openWidget(); }
-	window.toggleWidget = toggleWidget;
 
 	function bubble(txt,who='sys'){ const d=document.createElement('div'); d.className=who; d.textContent=txt; chat.appendChild(d); chat.scrollTop=chat.scrollHeight; }
 	function todayISO(){ return new Date().toISOString().slice(0,10); }
@@ -124,7 +108,7 @@
 	  const wrap=document.createElement('div'); wrap.className='sys choices';
 	  if(q.type==='singleChoice'){
 		q.options.forEach(opt=>{ const b=document.createElement('button'); b.type='button'; b.className='pill'; b.textContent=opt; b.addEventListener('click',()=>handleAnswer(opt)); wrap.appendChild(b); });
-	  } else { // multi
+	  } else { 
 		const selected=new Set();
 		q.options.forEach(opt=>{ const b=document.createElement('button'); b.type='button'; b.className='pill'; b.textContent=opt; b.addEventListener('click',()=>{ b.classList.toggle('selected'); if(b.classList.contains('selected')) selected.add(opt); else selected.delete(opt); updateConfirm(); }); wrap.appendChild(b); });
 		const ok=document.createElement('button'); ok.type='button'; ok.className='pill confirm-pill'; ok.textContent='選択を確定';
@@ -135,7 +119,7 @@
 	  chat.appendChild(wrap); chat.scrollTop=chat.scrollHeight;
 	}
 
-	function start(){ state.started=true; window.__startChat = start; window.__bubble = bubble; window.__ask = ask; bubble('ご相談ありがとうございます！いくつかの質問にお答えください。'); ask(); }
+	function start(){ state.started=true; bubble('ご相談ありがとうございます！いくつかの質問にお答えください。'); ask(); }
 
 	function ask(){ if(state.step>=FLOW.length){ return finish(); } const q=FLOW[state.step]; bubble(`Q${state.step+1}：${q.label}`); if(q.type==='singleChoice'||q.type==='multiChoice') renderChoices(q); textInput.type=q.type==='date'?'date':(q.type==='email'?'email':(q.type==='tel'?'tel':'text')); textInput.value=''; if(q.type==='date'){ textInput.min=todayISO(); textInput.value=todayISO(); } }
 
@@ -143,30 +127,79 @@
 
 	function finish(){ bubble('ありがとうございます！送信処理を行います…'); showLoading(); setTimeout(()=>{ hideLoading(); bubble('送信が完了しました！'); },1000); }
 
-	// 初期は閉じた状態（SP/PC共通）。テストで開いたままにしたい場合は openWidget(); を呼ぶ。
+	function openWidget(){ widget.classList.add('open'); launcher.setAttribute('aria-expanded','true'); if(!state.started){ start(); } }
+	function closeWidget(){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }
+	function toggleWidget(){ widget.classList.contains('open')? closeWidget(): openWidget(); }
+
+	launcher.addEventListener('click',toggleWidget);
+	launcher.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleWidget(); }});
+	closeBtn.addEventListener('click',closeWidget);
+	document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeWidget(); });
   })();
   </script>
-<!-- v1.4 open/close robust fallback -->
+<!-- v1.5: 開閉安定フォールバック（文法エラーを避けるため独立スクリプトで上書き） -->
 <script>
 (function(){
+  function bind(){
+	var launcher = document.getElementById('launcherBar');
+	var widget   = document.getElementById('chatWidget');
+	if(!launcher || !widget) return;
+	function openWidget(){ widget.classList.add('open'); launcher.setAttribute('aria-expanded','true'); if(window.__startChat) try{ window.__startChat(); }catch(e){} }
+	function closeWidget(){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }
+	function toggleWidget(){ widget.classList.contains('open') ? closeWidget() : openWidget(); }
+	// 公開
+	window.toggleWidget = toggleWidget;
+	// バインド（重複登録を避けるため一旦既存を解除→再登録）
+	launcher.onclick = null;
+	launcher.addEventListener('click', toggleWidget);
+	launcher.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleWidget(); } });
+	document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeWidget(); });
+  }
+  if(document.readyState==='complete' || document.readyState==='interactive') bind();
+  else document.addEventListener('DOMContentLoaded', bind, {once:true});
+})();
+</script>
+<!-- v1.5.2: 強制起動＆空時フォールバック。閉じた後も必ず再オープンで案内＋Q1を描画 -->
+<script>
+(function(){
+  function greetIfEmpty(){
+	try{
+	  var chat=document.getElementById('chat');
+	  if(!chat) return;
+	  if(chat.childElementCount===0){
+		// 直接描画（__bubbleが無くても最低限表示）
+		var d=document.createElement('div'); d.className='sys'; d.textContent='ご相談ありがとうございます！いくつかの質問にお答えください。'; chat.appendChild(d); chat.scrollTop=chat.scrollHeight;
+		if(window.__ask) try{ window.__ask(); }catch(e){}
+	  }
+	}catch(e){ console && console.warn && console.warn(e); }
+  }
+  function openNow(){
+	var launcher=document.getElementById('launcherBar');
+	var widget=document.getElementById('chatWidget');
+	if(widget){ widget.classList.add('open'); if(launcher) launcher.setAttribute('aria-expanded','true'); }
+	if(window.__startChat) try{ window.__startChat(); }catch(e){}
+	greetIfEmpty();
+  }
+  // 初回は閉じたままにする（自動オープン停止）
+  function boot(){ /* 何もしない */ }
+  if(document.readyState==='complete' || document.readyState==='interactive') boot();
+  else document.addEventListener('DOMContentLoaded', boot, {once:true});
+
+  // ランチャー再開時も保険
   function bind(){
 	var launcher=document.getElementById('launcherBar');
 	var widget=document.getElementById('chatWidget');
 	if(!launcher||!widget) return;
-	launcher.style.zIndex='2147483640';
-	function toggle(){
-	  var isOpen = widget.classList.contains('open');
-	  if(isOpen){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }
-	  else{ widget.classList.add('open'); launcher.setAttribute('aria-expanded','true'); if(window.__startChat) try{ window.__startChat(); }catch(e){} }
-	}
-	// 保存用に公開
-	window.toggleWidget = toggle;
-	// もしメインJS側のリスナーが何らかの理由で外れてもこちらで動く
-	launcher.addEventListener('click', toggle);
-	launcher.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); }});
-	document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }});
+	function openWidget(){ widget.classList.add('open'); launcher.setAttribute('aria-expanded','true'); if(window.__startChat) try{ window.__startChat(); }catch(e){} greetIfEmpty(); }
+	function closeWidget(){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }
+	function toggleWidget(){ widget.classList.contains('open') ? closeWidget() : openWidget(); }
+	launcher.onclick = null; // 既存を解除
+	launcher.addEventListener('click', toggleWidget);
+	launcher.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleWidget(); } });
+	document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeWidget(); });
+	window.toggleWidget = toggleWidget;
   }
-  if(document.readyState==='complete'||document.readyState==='interactive') bind();
+  if(document.readyState==='complete' || document.readyState==='interactive') bind();
   else document.addEventListener('DOMContentLoaded', bind, {once:true});
 })();
 </script>
