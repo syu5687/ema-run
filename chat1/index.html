@@ -3,19 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ihg Best Match | フォーム→チャットボット化（v3.0 安定版）</title>
+  <title>Ihg Best Match | フォーム→チャットボット化（v3.5 送信ガード：未選択で進まない）</title>
   <link rel="icon" href="data:,">
   <style>
 	:root{--teal:#0e7490;--hdr:#083344;--blue:#2563eb;}
 	body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",Helvetica,Arial,sans-serif;}
 
-	/* ランチャー */
 	.chat-launcher{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:var(--teal);color:#fff;border-radius:12px;padding:12px 16px;box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:2147483000;cursor:pointer;min-width:320px}
 	.chat-launcher .chev{margin-left:6px;transition:transform .2s ease}
 	.chat-launcher[aria-expanded="true"] .chev{transform:rotate(180deg)}
 	@media(max-width:640px){.chat-launcher{left:0;right:0;bottom:0;transform:none;border-radius:0;justify-content:center;min-width:unset;width:100%}}
 
-	/* チャットウィンドウ */
 	.chat{position:fixed;right:20px;bottom:96px;width:min(420px,calc(100vw - 40px));height:70vh;max-height:620px;border-radius:16px;background:#fff;box-shadow:0 20px 40px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;z-index:2147483001;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(18px) scale(.98);transition:transform .28s,opacity .18s,visibility 0s linear .18s}
 	.chat.open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
 	@media(max-width:640px){.chat{right:0;left:0;bottom:0;top:0;width:100vw;height:100vh;max-height:none;border-radius:0;transform:translateY(100%)}.chat.open{transform:translateY(0)}}
@@ -29,7 +27,6 @@
 	.chat-footer input{padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px}
 	.chat-footer button{padding:10px 14px;border:0;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer}
 
-	/* 選択肢 */
 	.choices{display:flex;flex-wrap:wrap;gap:6px 8px}
 	.pill{padding:6px 12px;font-size:14px;border:1px solid #cbd5e1;border-radius:20px;background:#fff;cursor:pointer}
 	.pill.selected{background:var(--teal);color:#fff;border-color:var(--teal)}
@@ -38,7 +35,6 @@
 	.confirm.active{background:var(--blue);color:#fff;border-color:var(--blue);animation:pulse 1s ease-in-out infinite}
 	@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.5)}50%{box-shadow:0 0 0 8px rgba(37,99,235,0)}}
 
-	/* ローディングスピナー */
 	.loading{position:absolute;inset:0;background:rgba(255,255,255,.85);display:none;align-items:center;justify-content:center;z-index:10}
 	.loading.active{display:flex}
 	.spinner{width:48px;height:48px;border:4px solid var(--teal);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
@@ -55,7 +51,6 @@
   </section>
 <script>
 (function(){
-  // 質問フロー定義
   const FLOW=[
 	{ key:'visited_before', label:'当館にお越しいただいたことはありますか？', type:'singleChoice', options:['なし','ある（結婚式）','ある（宴会）'] },
 	{ key:'tour_status', label:'式場見学状況は？', type:'singleChoice', options:['初めて','2式場目','3式場目','4式場以上'] },
@@ -72,11 +67,10 @@
 	{ key:'address', label:'ご住所（市区町村以降）', type:'text', required:true },
 	{ key:'has_kids', label:'お子様はいらっしゃいますか？', type:'singleChoice', options:['あり','なし'] },
 	{ key:'visit_1st', label:'来館希望日（第1希望）をカレンダーから選択してください', type:'date', required:true },
-	{ key:'visit_2nd', label:'来館希望日（第2希望）をカレンダーから選択してください', type:'date', required:true },
-	{ key:'consent', label:'個人情報保護方針に同意いただけますか？「同意します」と入力してください。', type:'consent', required:true }
+	{ key:'visit_2nd', label:'来館希望日（第2希望）をカレンダーから選択してください', type:'date', required:true }
   ];
 
-  const state={step:0,answers:{},started:false};
+  const state={step:0,answers:{},started:false,confirming:false};
   const chat=document.getElementById('chat');
   const textInput=document.getElementById('textInput');
   const sendBtn=document.getElementById('sendBtn');
@@ -85,16 +79,17 @@
   const closeBtn=document.getElementById('closeBtn');
   const loading=document.getElementById('loading');
 
-  // ユーティリティ
+  // サンクスページURL（デフォルト: 同ディレクトリのthanks.html）。?thanks= で上書き可能
+  const THANKS_URL = (()=>{ try{ const u=new URL(location.href); return u.searchParams.get('thanks') || 'thanks.html'; }catch(_){ return 'thanks.html'; } })();
+
   function bubble(txt,who='sys'){const d=document.createElement('div');d.className=who;d.textContent=txt;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
   const todayISO=()=>new Date().toISOString().slice(0,10);
 
-  // 質問レンダリング
   function renderChoices(q){
 	const wrap=document.createElement('div');wrap.className='sys choices';wrap.dataset.step=state.step;
 	if(q.type==='singleChoice'){
 	  q.options.forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='pill';b.textContent=opt;b.addEventListener('click',()=>{disableChoices(wrap);handleAnswer(opt);});wrap.appendChild(b)});
-	} else { // multi
+	} else {
 	  const selected=new Set();
 	  q.options.forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='pill';b.textContent=opt;b.addEventListener('click',()=>{b.classList.toggle('selected');b.classList.contains('selected')?selected.add(opt):selected.delete(opt);updateConfirm();});wrap.appendChild(b)});
 	  const ok=document.createElement('button');ok.type='button';ok.className='pill confirm';ok.textContent='選択を確定';
@@ -105,41 +100,74 @@
   }
   function disableChoices(wrap){wrap.querySelectorAll('button').forEach(b=>b.classList.add('disabled'));}
 
-  // 質問進行
   function ask(){
 	if(state.step>=FLOW.length){return finish();}
 	const q=FLOW[state.step];
 	bubble(`Q${state.step+1}：${q.label}`);
-	if(q.type==='singleChoice'||q.type==='multiChoice') renderChoices(q);
-	// 入力欄制御
-	if(q.type==='date'){textInput.type='date';textInput.min=todayISO();textInput.value=todayISO();}
-	else if(q.type==='email'){textInput.type='email';textInput.value='';}
-	else if(q.type==='tel'){textInput.type='tel';textInput.value='';}
-	else{textInput.type='text';textInput.value='';}
-	textInput.focus();
+	if(q.type==='singleChoice'||q.type==='multiChoice'){
+	  renderChoices(q);
+	  // ボタン選択形式は送信ボタンで進めない
+	  sendBtn.disabled = true;
+	  textInput.type='text'; textInput.value='';
+	}else{
+	  // 入力形式のみ送信ボタンで進める
+	  sendBtn.disabled = false;
+	  if(q.type==='date'){textInput.type='date';textInput.min=todayISO();textInput.value=todayISO();}
+	  else if(q.type==='email'){textInput.type='email';textInput.value='';}
+	  else if(q.type==='tel'){textInput.type='tel';textInput.value='';}
+	  else{textInput.type='text';textInput.value='';}
+	  textInput.focus();
+	}
   }
 
-  // 回答処理
   function handleAnswer(val){
 	const q=FLOW[state.step];
+	// ボタン選択形式で未選択(=sendBtnから呼ばれた)は無視
+	if(val===undefined && (q.type==='singleChoice' || q.type==='multiChoice')){
+	  bubble('選択肢をお選びください');
+	  return;
+	}
 	const raw=(val!==undefined)?val:(textInput.value||'').trim();
 	if(q.required){
-	  if(q.type==='consent'){if(raw!=='同意します'){bubble('「同意します」と入力してください');return;}}
-	  else if(Array.isArray(raw)?raw.length===0:!raw){bubble('必須入力です');return;}
+	  if(Array.isArray(raw)?raw.length===0:!raw){bubble('必須入力です');return;}
 	}
 	bubble(Array.isArray(raw)?raw.join('、'):raw,'user');
 	state.answers[q.key]=raw;state.step++;
 	loading.classList.add('active');
-	setTimeout(()=>{loading.classList.remove('active');ask();},500);
+	setTimeout(()=>{loading.classList.remove('active');
+	  if(state.step>=FLOW.length){confirmBeforeSend();}
+	  else{ask();}
+	},500);
+  }
+	bubble(Array.isArray(raw)?raw.join('、'):raw,'user');
+	state.answers[q.key]=raw;state.step++;
+	loading.classList.add('active');
+	setTimeout(()=>{loading.classList.remove('active');
+	  if(state.step>=FLOW.length){confirmBeforeSend();}
+	  else{ask();}
+	},500);
   }
 
-  // 完了
+  function confirmBeforeSend(){
+	if(state.confirming) return;
+	state.confirming=true;
+	bubble('この内容で送信してもよろしいですか？');
+	const wrap=document.createElement('div');wrap.className='sys choices';
+	const b=document.createElement('button');b.type='button';b.className='pill';b.textContent='はい';
+	b.addEventListener('click',()=>{disableChoices(wrap);finish();});
+	wrap.appendChild(b);
+	chat.appendChild(wrap);chat.scrollTop=chat.scrollHeight;
+  }
+
   function finish(){
 	loading.classList.add('active');
-	setTimeout(()=>{loading.classList.remove('active');bubble('送信が完了しました！');},800);
+	setTimeout(()=>{
+	  loading.classList.remove('active');
+	  bubble('この内容で送信します');
+	  setTimeout(()=>{ window.location.href = THANKS_URL; }, 900);
+	},800);
   }
 
-  // 開閉制御（安定版）
   let toggleBusy=false;
   function openWidget(){widget.classList.add('open');launcher.setAttribute('aria-expanded','true');widget.setAttribute('aria-hidden','false');if(!state.started){state.started=true;bubble('ご相談ありがとうございます！いくつかの質問にお答えください。');ask();}}
   function closeWidget(){widget.classList.remove('open');launcher.setAttribute('aria-expanded','false');widget.setAttribute('aria-hidden','true');}
@@ -150,7 +178,6 @@
   sendBtn.onclick=()=>handleAnswer();
   document.addEventListener('keydown',e=>{if(e.key==='Escape') closeWidget();});
 
-  // 初期は閉じる
   closeWidget();
 })();
 </script>
