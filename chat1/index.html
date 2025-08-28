@@ -1,0 +1,50 @@
+<?php
+// Allow CORS if LP domain is different
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
+
+if ($_SERVER['REQUEST_URI'] === '/sendmail' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  $raw = file_get_contents('php://input');
+  $data = json_decode($raw, true);
+  if (!$data) {
+	http_response_code(400);
+	echo json_encode(['ok'=>false,'error'=>'invalid json']);
+	exit;
+  }
+
+  // --- sanitize ---
+  $fields = [
+	'groom_name','bride_name','phone','email','address','has_kids',
+	'visit_1st','visit_2nd','visited_before','tour_status','ceremony_style',
+	'guest_counts_groom','guest_counts_bride','season_fixed','time_band','costume',
+	'consent','source','page','ts'
+  ];
+  $safe = [];
+  foreach ($fields as $f) { $safe[$f] = isset($data[$f]) ? trim((string)$data[$f]) : ''; }
+
+  // --- mail settings ---
+  $to      = 'inquiry@example.com';        // ★宛先
+  $subject = '【Best Match】チャット問い合わせ';
+  $from    = 'no-reply@your-domain.example'; // ★送信元（SPF/DMARC整合推奨）
+  $headers = [
+	'MIME-Version: 1.0',
+	'Content-type: text/plain; charset=UTF-8',
+	"From: {$from}",
+	"Reply-To: ".($safe['email'] ?: $from)
+  ];
+
+  $lines = [];
+  foreach ($safe as $k=>$v) { $lines[] = sprintf("%s: %s", $k, $v); }
+  $body = implode("\n", $lines);
+
+  $ok = mail($to, $subject, $body, implode("\r\n", $headers));
+  header('Content-Type: application/json');
+  if ($ok) { echo json_encode(['ok'=>true]); }
+  else { http_response_code(500); echo json_encode(['ok'=>false,'error'=>'mail failed']); }
+  exit;
+}
+
+http_response_code(404);
+echo 'not found';
