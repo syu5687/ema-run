@@ -3,38 +3,68 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ihg Best Match | フォーム→チャットボット化（v1.1）</title>
-  <!-- build: v1.1 2025-08-28T10:22Z mk -->
+  <title>Ihg Best Match | フォーム→チャットボット化（v1.4 レスポンシブ＆開閉）</title>
+  <!-- build: v1.4 2025-08-28T13:40Z mk | 変更点: 開閉できるランチャーバー/PC・SPレスポンシブ、SPは開いたら全画面 -->
   <style>
+	:root{
+	  --teal:#14919b; /* ランチャーバー色 */
+	  --teal-dark:#0f6f78;
+	  --header:#083344;
+	}
 	body { font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",Helvetica,Arial,sans-serif; }
-	.chat-widget { position: fixed; right: 20px; bottom: 96px; width: min(420px, calc(100vw - 40px)); height: 70vh; max-height: 620px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,.25); background: #fff; display: flex; flex-direction: column; overflow: hidden; z-index: 9999; }
-	.chat-header { padding: 14px 16px; background: #083344; color: #fff; }
-	.chat-body { padding: 12px; gap: 8px; display: flex; flex-direction: column; overflow-y: auto; background: #f8fafc; }
-	.sys,.user { max-width: 86%; padding: 10px 12px; border-radius: 14px; font-size: 14px; white-space: pre-wrap; }
-	.sys { background: #e2f0f6; align-self: flex-start; }
-	.user { background: #fff; align-self: flex-end; border: 1px solid #e5e7eb; }
-	.chat-footer { padding: 10px; display: grid; grid-template-columns: 1fr auto; gap: 8px; background: #fff; }
-	.chat-footer input { padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; }
-	.chat-footer button { padding: 10px 14px; border: 0; border-radius: 10px; background: #0e7490; color: #fff; cursor: pointer; }
-	.loading-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.8); display: none; align-items: center; justify-content: center; z-index: 10000; }
-	.loading-overlay.active { display: flex; }
-	.loading-spinner { width: 48px; height: 48px; border: 4px solid #0e7490; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
-	@keyframes spin { to { transform: rotate(360deg); } }
 
-	/* 選択肢ピル */
-	.choices { display:flex; flex-wrap:wrap; gap:6px 8px; }
-	.pill { display:inline-block; margin:4px 0 0 0; padding:6px 12px; font-size:14px; border:1px solid #cbd5e1; border-radius:20px; background:#fff; cursor:pointer; }
-	.pill.selected { background:#0e7490; color:#fff; border-color:#0e7490; }
+	/* ===== ランチャーバー ===== */
+	.chat-launcher-bar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:var(--teal);color:#fff;border-radius:10px;padding:12px 16px;box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:2147483640;cursor:pointer;min-width:320px;width:fit-content;pointer-events:auto;}
+	.chat-launcher-bar .icon{font-size:20px;line-height:1}
+	.chat-launcher-bar .label{font-weight:600;letter-spacing:.02em}
+	.chat-launcher-bar .chev{margin-left:6px;opacity:.9;transition:transform .2s ease;display:inline-block} .chat-launcher-bar[aria-expanded="true"] .chev{transform:rotate(180deg);} 
+	.chat-launcher-bar:active{transform:translateX(-50%) scale(.98)}
+	@media (max-width:640px){
+	  .chat-launcher-bar{left:0;right:0;bottom:0;transform:none;border-radius:0;justify-content:center;width:100%;padding:14px 18px;}
+	}
 
-	/* v1.1: 確定ボタン色を変更 */
-	.confirm-pill { border:1px solid #2563eb; background:#fff; color:#2563eb; }
-	.confirm-pill.active { background:#2563eb; color:#fff; border-color:#2563eb; animation:pulse 1s ease-in-out infinite; }
-	@keyframes pulse { 0%,100% { box-shadow:0 0 0 0 rgba(37,99,235,.55);} 50% { box-shadow:0 0 0 8px rgba(37,99,235,0); } }
+	/* ===== チャットウィジェット ===== */
+	.chat-widget{position:fixed;right:20px;bottom:96px;width:min(420px, calc(100vw - 40px));height:70vh;max-height:620px;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,.25);background:#fff;display:none;flex-direction:column;overflow:hidden;z-index:2147483001;}
+	.chat-widget.open{display:flex}
+	.chat-header{padding:14px 16px;background:var(--header);color:#fff;display:flex;align-items:center;justify-content:space-between}
+	.chat-header .title{font-weight:700}
+	.chat-header .close{background:transparent;border:0;color:#fff;font-size:20px;cursor:pointer}
+	.chat-body{padding:12px;gap:8px;display:flex;flex-direction:column;overflow-y:auto;background:#f8fafc}
+	.sys,.user{max-width:86%;padding:10px 12px;border-radius:14px;font-size:14px;white-space:pre-wrap}
+	.sys{background:#e2f0f6;align-self:flex-start}
+	.user{background:#fff;align-self:flex-end;border:1px solid #e5e7eb}
+	.chat-footer{padding:10px;display:grid;grid-template-columns:1fr auto;gap:8px;background:#fff}
+	.chat-footer input{padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px}
+	.chat-footer button{padding:10px 14px;border:0;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer}
+	.loading-overlay{position:absolute;inset:0;background:rgba(255,255,255,0.85);display:none;align-items:center;justify-content:center;z-index:10}
+	.loading-overlay.active{display:flex}
+	.loading-spinner{width:48px;height:48px;border:4px solid var(--teal);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
+	@keyframes spin{to{transform:rotate(360deg)}}
+
+	/* 選択肢ピル（v1.1の青から戻せます。ここではv1.1準拠） */
+	.choices{display:flex;flex-wrap:wrap;gap:6px 8px}
+	.pill{display:inline-block;margin:4px 0 0 0;padding:6px 12px;font-size:14px;border:1px solid #cbd5e1;border-radius:20px;background:#fff;cursor:pointer}
+	.pill.selected{background:#2563eb;color:#fff;border-color:#2563eb}
+	.confirm-pill{border:1px solid #2563eb;background:#fff;color:#2563eb}
+	.confirm-pill.active{background:#2563eb;color:#fff;border-color:#2563eb;animation:pulse 1s ease-in-out infinite}
+	@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.55)}50%{box-shadow:0 0 0 8px rgba(37,99,235,0)}}
+
+	/* SP：開いたら全画面 */
+	@media (max-width:640px){
+	  .chat-widget{right:0;bottom:0;left:0;top:0;width:100vw;height:100vh;max-height:none;border-radius:0}
+	}
   </style>
 </head>
 <body>
-  <section class="chat-widget" role="dialog" aria-label="ご相談チャット">
-	<div class="chat-header"><h3>ご相談チャット</h3></div>
+  <!-- ランチャーバー（PC=中央下/ SP=下部全幅） -->
+  <div class="chat-launcher-bar" id="launcherBar" role="button" tabindex="0" aria-controls="chatWidget" aria-expanded="false" onclick="window.toggleWidget && window.toggleWidget()">
+	<span class="icon">💬</span>
+	<span class="label">ご相談チャット</span>
+	<span class="chev">▴</span>
+  </div>
+
+  <section class="chat-widget" id="chatWidget" role="dialog" aria-label="ご相談チャット">
+	<div class="chat-header"><span class="title">ご相談チャット</span><button class="close" id="chatClose" aria-label="閉じる">×</button></div>
 	<div class="chat-body" id="chat"></div>
 	<div class="chat-footer">
 	  <input id="textInput" placeholder="ここに入力…" />
@@ -45,6 +75,7 @@
 
   <script>
   (function(){
+	// ====== v1.4：フロー（v1.3ベース。season_fixed削除済） ======
 	const FLOW = [
 	  { key: 'visited_before', label: '当館にお越しいただいたことはありますか？', type: 'singleChoice', options: ['なし','ある（結婚式）','ある（宴会）'] },
 	  { key: 'tour_status', label: '式場見学状況は？', type: 'singleChoice', options: ['初めて','2式場目','3式場目','4式場以上'] },
@@ -60,66 +91,84 @@
 	  { key: 'email', label: 'メールアドレス', type: 'email', required:true },
 	  { key: 'address', label: 'ご住所（市区町村以降）', type: 'text', required:true },
 	  { key: 'has_kids', label: 'お子様はいらっしゃいますか？', type: 'singleChoice', options: ['あり','なし'] },
-			{ key: 'visit_1st', label: '来館希望日（第1希望）をカレンダーから選択してください', type: 'date', required:true },
+	  { key: 'visit_1st', label: '来館希望日（第1希望）をカレンダーから選択してください', type: 'date', required:true },
 	  { key: 'visit_2nd', label: '来館希望日（第2希望）をカレンダーから選択してください', type: 'date', required:true },
 	  { key: 'consent', label: '個人情報保護方針に同意いただけますか？「同意します」と入力してください。', type: 'consent', required:true }
 	];
 
+	// ===== 要素と状態 =====
+	const widget=document.getElementById('chatWidget');
+	const launcher=document.getElementById('launcherBar');
+	const closeBtn=document.getElementById('chatClose');
 	const chat=document.getElementById('chat');
 	const textInput=document.getElementById('textInput');
 	const sendBtn=document.getElementById('sendBtn');
 	const overlay=document.getElementById('loadingOverlay');
-	const state={step:0,answers:{},busy:false};
+	const state={step:0,answers:{},busy:false,started:false};
 
-	function bubble(txt,who='sys'){const d=document.createElement('div');d.className=who;d.textContent=txt;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
-	function todayISO(){return new Date().toISOString().slice(0,10);}
-	function showLoading(){overlay.classList.add('active');textInput.disabled=true;sendBtn.disabled=true;}
-	function hideLoading(){overlay.classList.remove('active');textInput.disabled=false;sendBtn.disabled=false;}
+	// ランチャーと閉じる
+	function openWidget(){ widget.classList.add('open'); launcher.setAttribute('aria-expanded','true'); if(!state.started){ start(); } } }
+	function closeWidget(){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }
+	launcher.addEventListener('click',()=>{ widget.classList.contains('open')? closeWidget(): openWidget(); });
+	closeBtn.addEventListener('click',closeWidget);
+	document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeWidget(); });
+	function toggleWidget(){ widget.classList.contains('open')? closeWidget(): openWidget(); }
+	window.toggleWidget = toggleWidget;
+
+	function bubble(txt,who='sys'){ const d=document.createElement('div'); d.className=who; d.textContent=txt; chat.appendChild(d); chat.scrollTop=chat.scrollHeight; }
+	function todayISO(){ return new Date().toISOString().slice(0,10); }
+	function showLoading(){ overlay.classList.add('active'); textInput.disabled=true; sendBtn.disabled=true; }
+	function hideLoading(){ overlay.classList.remove('active'); textInput.disabled=false; sendBtn.disabled=false; }
 
 	function renderChoices(q){
-	  const wrap=document.createElement('div');wrap.className='sys choices';
+	  const wrap=document.createElement('div'); wrap.className='sys choices';
 	  if(q.type==='singleChoice'){
-		q.options.forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='pill';b.textContent=opt;b.addEventListener('click',()=>handleAnswer(opt));wrap.appendChild(b);});
-	  } else {
+		q.options.forEach(opt=>{ const b=document.createElement('button'); b.type='button'; b.className='pill'; b.textContent=opt; b.addEventListener('click',()=>handleAnswer(opt)); wrap.appendChild(b); });
+	  } else { // multi
 		const selected=new Set();
-		q.options.forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='pill';b.textContent=opt;b.addEventListener('click',()=>{b.classList.toggle('selected');if(b.classList.contains('selected'))selected.add(opt);else selected.delete(opt);updateConfirm();});wrap.appendChild(b);});
-		const ok=document.createElement('button');ok.type='button';ok.className='pill confirm-pill';ok.textContent='選択を確定';
-		function updateConfirm(){const n=selected.size;if(n>0){ok.classList.add('active');ok.textContent=`選択を確定（${n}）`;}else{ok.classList.remove('active');ok.textContent='選択を確定';}}
+		q.options.forEach(opt=>{ const b=document.createElement('button'); b.type='button'; b.className='pill'; b.textContent=opt; b.addEventListener('click',()=>{ b.classList.toggle('selected'); if(b.classList.contains('selected')) selected.add(opt); else selected.delete(opt); updateConfirm(); }); wrap.appendChild(b); });
+		const ok=document.createElement('button'); ok.type='button'; ok.className='pill confirm-pill'; ok.textContent='選択を確定';
+		function updateConfirm(){ const n=selected.size; if(n>0){ ok.classList.add('active'); ok.textContent=`選択を確定（${n}）`; } else { ok.classList.remove('active'); ok.textContent='選択を確定'; } }
 		ok.addEventListener('click',()=>handleAnswer(Array.from(selected)));
-		wrap.appendChild(ok);updateConfirm();
+		wrap.appendChild(ok); updateConfirm();
 	  }
-	  chat.appendChild(wrap);chat.scrollTop=chat.scrollHeight;
+	  chat.appendChild(wrap); chat.scrollTop=chat.scrollHeight;
 	}
 
-	function ask(){
-	  if(state.step>=FLOW.length){return finish();}
-	  const q=FLOW[state.step];
-	  bubble(`Q${state.step+1}：${q.label}`);
-	  if(q.type==='singleChoice'||q.type==='multiChoice')renderChoices(q);
-	  textInput.type=q.type==='date'?'date':(q.type==='email'?'email':(q.type==='tel'?'tel':'text'));
-	  textInput.value='';
-	  if(q.type==='date'){textInput.min=todayISO();textInput.value=todayISO();}
-	  textInput.focus();
-	}
+	function start(){ state.started=true; window.__startChat = start; window.__bubble = bubble; window.__ask = ask; bubble('ご相談ありがとうございます！いくつかの質問にお答えください。'); ask(); }
 
-	function handleAnswer(val){
-	  if(state.busy)return;const q=FLOW[state.step];
-	  const raw=(val!==undefined)?val:(textInput.value||'').trim();
-	  if(q.required&&(Array.isArray(raw)?raw.length===0:!raw)){bubble('必須入力です');return;}
-	  bubble(Array.isArray(raw)?raw.join('、'):raw,'user');
-	  state.answers[q.key]=raw;state.step++;
-	  state.busy=true;showLoading();setTimeout(()=>{hideLoading();state.busy=false;ask();},500);
-	}
+	function ask(){ if(state.step>=FLOW.length){ return finish(); } const q=FLOW[state.step]; bubble(`Q${state.step+1}：${q.label}`); if(q.type==='singleChoice'||q.type==='multiChoice') renderChoices(q); textInput.type=q.type==='date'?'date':(q.type==='email'?'email':(q.type==='tel'?'tel':'text')); textInput.value=''; if(q.type==='date'){ textInput.min=todayISO(); textInput.value=todayISO(); } }
 
-	function finish(){bubble('ありがとうございます！送信処理を行います…');showLoading();setTimeout(()=>{hideLoading();bubble('送信が完了しました！');},1000);}
+	function handleAnswer(val){ if(state.busy) return; const q=FLOW[state.step]; const raw=(val!==undefined)? val : (textInput.value||'').trim(); if(q.required && (Array.isArray(raw)? raw.length===0 : !raw)){ bubble('必須入力です'); return; } bubble(Array.isArray(raw)? raw.join('、'):raw,'user'); state.answers[q.key]=raw; state.step++; state.busy=true; showLoading(); setTimeout(()=>{ hideLoading(); state.busy=false; ask(); },500); }
 
-	function boot(){bubble('ご相談ありがとうございます！いくつかの質問にお答えください。');ask();}
-	if(document.readyState==='complete'||document.readyState==='interactive')boot();
-	else document.addEventListener('DOMContentLoaded',boot,{once:true});
+	function finish(){ bubble('ありがとうございます！送信処理を行います…'); showLoading(); setTimeout(()=>{ hideLoading(); bubble('送信が完了しました！'); },1000); }
 
-	sendBtn.addEventListener('click',()=>handleAnswer());
-	textInput.addEventListener('keydown',e=>{if(e.key==='Enter')handleAnswer();});
+	// 初期は閉じた状態（SP/PC共通）。テストで開いたままにしたい場合は openWidget(); を呼ぶ。
   })();
   </script>
+<!-- v1.4 open/close robust fallback -->
+<script>
+(function(){
+  function bind(){
+	var launcher=document.getElementById('launcherBar');
+	var widget=document.getElementById('chatWidget');
+	if(!launcher||!widget) return;
+	launcher.style.zIndex='2147483640';
+	function toggle(){
+	  var isOpen = widget.classList.contains('open');
+	  if(isOpen){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }
+	  else{ widget.classList.add('open'); launcher.setAttribute('aria-expanded','true'); if(window.__startChat) try{ window.__startChat(); }catch(e){} }
+	}
+	// 保存用に公開
+	window.toggleWidget = toggle;
+	// もしメインJS側のリスナーが何らかの理由で外れてもこちらで動く
+	launcher.addEventListener('click', toggle);
+	launcher.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); }});
+	document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }});
+  }
+  if(document.readyState==='complete'||document.readyState==='interactive') bind();
+  else document.addEventListener('DOMContentLoaded', bind, {once:true});
+})();
+</script>
 </body>
 </html>
