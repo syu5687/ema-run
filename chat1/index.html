@@ -3,29 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ihg Best Match | フォーム→チャットボット化（v1.6 初期は閉じた状態・再開可）</title>
+  <title>Ihg Best Match | フォーム→チャットボット化（v2.2 確定ボタン点滅復活）</title>
+  <link rel="icon" href="data:,">
   <style>
-	:root{
-	  --teal:#14919b;
-	  --teal-dark:#0f6f78;
-	  --header:#083344;
-	}
-	body { font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",Helvetica,Arial,sans-serif; }
+	:root{--teal:#0e7490;--hdr:#083344;--blue:#2563eb;}
+	body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",Helvetica,Arial,sans-serif;}
+	.chat-launcher{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:var(--teal);color:#fff;border-radius:12px;padding:12px 16px;box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:2147483000;cursor:pointer;min-width:320px}
+	.chat-launcher .chev{margin-left:6px;transition:transform .2s ease}
+	.chat-launcher[aria-expanded="true"] .chev{transform:rotate(180deg)}
+	@media(max-width:640px){.chat-launcher{left:0;right:0;bottom:0;transform:none;border-radius:0;justify-content:center;min-width:unset;width:100%}}
 
-	.chat-launcher-bar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:var(--teal);color:#fff;border-radius:10px;padding:12px 16px;box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:2147483640;cursor:pointer;min-width:320px;width:fit-content;}
-	.chat-launcher-bar .icon{font-size:20px;line-height:1}
-	.chat-launcher-bar .label{font-weight:600;letter-spacing:.02em}
-	.chat-launcher-bar .chev{margin-left:6px;opacity:.9;transition:transform .2s ease;display:inline-block}
-	.chat-launcher-bar[aria-expanded="true"] .chev{transform:rotate(180deg);}
-	@media (max-width:640px){
-	  .chat-launcher-bar{left:0;right:0;bottom:0;transform:none;border-radius:0;justify-content:center;width:100%;padding:14px 18px;}
-	}
-
-	.chat-widget{position:fixed;right:20px;bottom:96px;width:min(420px, calc(100vw - 40px));height:70vh;max-height:620px;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,.25);background:#fff;display:none;flex-direction:column;overflow:hidden;z-index:2147483001;}
-	.chat-widget.open{display:flex}
-	.chat-header{padding:14px 16px;background:var(--header);color:#fff;display:flex;align-items:center;justify-content:space-between}
-	.chat-header .title{font-weight:700}
-	.chat-header .close{background:transparent;border:0;color:#fff;font-size:20px;cursor:pointer}
+	.chat{position:fixed;right:20px;bottom:96px;width:min(420px,calc(100vw - 40px));height:70vh;max-height:620px;border-radius:16px;background:#fff;box-shadow:0 20px 40px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;z-index:2147483001;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(18px) scale(.98);transition:transform .28s,opacity .18s,visibility 0s linear .18s}
+	.chat.open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+	@media(max-width:640px){.chat{right:0;left:0;bottom:0;top:0;width:100vw;height:100vh;max-height:none;border-radius:0;transform:translateY(100%)}.chat.open{transform:translateY(0)}}
+	.chat-header{padding:14px 16px;background:var(--hdr);color:#fff;display:flex;justify-content:space-between;align-items:center}
 	.chat-body{padding:12px;gap:8px;display:flex;flex-direction:column;overflow-y:auto;background:#f8fafc}
 	.sys,.user{max-width:86%;padding:10px 12px;border-radius:14px;font-size:14px;white-space:pre-wrap}
 	.sys{background:#e2f0f6;align-self:flex-start}
@@ -33,174 +24,87 @@
 	.chat-footer{padding:10px;display:grid;grid-template-columns:1fr auto;gap:8px;background:#fff}
 	.chat-footer input{padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px}
 	.chat-footer button{padding:10px 14px;border:0;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer}
-	.loading-overlay{position:absolute;inset:0;background:rgba(255,255,255,0.85);display:none;align-items:center;justify-content:center;z-index:10}
-	.loading-overlay.active{display:flex}
-	.loading-spinner{width:48px;height:48px;border:4px solid var(--teal);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
-	@keyframes spin{to{transform:rotate(360deg)}}
-
 	.choices{display:flex;flex-wrap:wrap;gap:6px 8px}
-	.pill{display:inline-block;margin:4px 0 0 0;padding:6px 12px;font-size:14px;border:1px solid #cbd5e1;border-radius:20px;background:#fff;cursor:pointer}
-	.pill.selected{background:#2563eb;color:#fff;border-color:#2563eb}
-	.confirm-pill{border:1px solid #2563eb;background:#fff;color:#2563eb}
-	.confirm-pill.active{background:#2563eb;color:#fff;border-color:#2563eb;animation:pulse 1s ease-in-out infinite}
-	@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.55)}50%{box-shadow:0 0 0 8px rgba(37,99,235,0)}}
-
-	@media (max-width:640px){
-	  .chat-widget{right:0;bottom:0;left:0;top:0;width:100vw;height:100vh;max-height:none;border-radius:0}
-	}
+	.pill{padding:6px 12px;font-size:14px;border:1px solid #cbd5e1;border-radius:20px;background:#fff;cursor:pointer}
+	.pill.selected{background:var(--teal);color:#fff;border-color:var(--teal)}
+	.pill.disabled{opacity:.5;pointer-events:none}
+	.confirm{border:1px solid var(--blue);background:#fff;color:var(--blue)}
+	.confirm.active{background:var(--blue);color:#fff;border-color:var(--blue);animation:pulse 1s ease-in-out infinite}
+	@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.5)}50%{box-shadow:0 0 0 8px rgba(37,99,235,0)}}
+	  /* ローディングスピナー */
+	.loading{position:absolute;inset:0;background:rgba(255,255,255,.85);display:none;align-items:center;justify-content:center;z-index:10}
+	.loading.active{display:flex}
+	.spinner{width:48px;height:48px;border:4px solid var(--teal);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite}
+	@keyframes spin{to{transform:rotate(360deg)}}
   </style>
-<link rel="icon" href="data:,">
 </head>
 <body>
-  <div class="chat-launcher-bar" id="launcherBar" role="button" tabindex="0" aria-controls="chatWidget" aria-expanded="false">
-	<span class="icon">💬</span>
-	<span class="label">ご相談チャット</span>
-	<span class="chev">▴</span>
-  </div>
-
-  <section class="chat-widget" id="chatWidget" role="dialog" aria-label="ご相談チャット">
-	<div class="chat-header"><span class="title">ご相談チャット</span><button class="close" id="chatClose" aria-label="閉じる">×</button></div>
+  <div class="chat-launcher" id="launcher" role="button" tabindex="0" aria-controls="chatBox" aria-expanded="false"><span>💬 ご相談チャット</span><span class="chev">▴</span></div>
+  <section class="chat" id="chatBox" role="dialog" aria-hidden="true">
+	<div class="chat-header"><span>ご相談チャット</span><button id="closeBtn">×</button></div>
 	<div class="chat-body" id="chat"></div>
-	<div class="chat-footer">
-	  <input id="textInput" placeholder="ここに入力…" />
-	  <button id="sendBtn" type="button">送信</button>
-	</div>
-	<div id="loadingOverlay" class="loading-overlay"><div class="loading-spinner"></div></div>
+	<div class="chat-footer"><input id="textInput" placeholder="ここに入力…" /><button id="sendBtn">送信</button></div>
+	<div class="loading" id="loading"><div class="spinner"></div></div>
   </section>
+<script>
+(function(){
+  const FLOW=[
+	{key:'visited_before',label:'当館にお越しいただいたことはありますか？',type:'singleChoice',options:['なし','ある（結婚式）','ある（宴会）']},
+	{key:'tour_status',label:'式場見学状況は？',type:'singleChoice',options:['初めて','2式場目','3式場目','4式場以上']},
+	{key:'ceremony_style',label:'挙式スタイル（複数可）',type:'multiChoice',options:['チャペル挙式','人前式（チャペル内・会場内）','神前式','ご披露宴のみ','その他']},
+	{key:'guest_counts_groom',label:'ご予定人数（新郎側）',type:'text'},
+	{key:'guest_counts_bride',label:'ご予定人数（新婦側）',type:'text'}
+  ];
+  const state={step:0,answers:{},started:false};
+  const chat=document.getElementById('chat');
+  const textInput=document.getElementById('textInput');
+  const sendBtn=document.getElementById('sendBtn');
+  const widget=document.getElementById('chatBox');
+  const launcher=document.getElementById('launcher');
+  const closeBtn=document.getElementById('closeBtn');
+  const loading=document.getElementById('loading');
 
-  <script>
-  (function(){
-	const FLOW = [
-	  { key: 'visited_before', label: '当館にお越しいただいたことはありますか？', type: 'singleChoice', options: ['なし','ある（結婚式）','ある（宴会）'] },
-	  { key: 'tour_status', label: '式場見学状況は？', type: 'singleChoice', options: ['初めて','2式場目','3式場目','4式場以上'] },
-	  { key: 'ceremony_style', label: '挙式スタイル（複数可）', type: 'multiChoice', options: ['チャペル挙式','人前式（チャペル内・会場内）','神前式','ご披露宴のみ','その他'] },
-	  { key: 'guest_counts_groom', label: 'ご予定人数（新郎側）', type: 'text' },
-	  { key: 'guest_counts_bride', label: 'ご予定人数（新婦側）', type: 'text' },
-	  { key: 'season_preference', label: 'ご希望の時期を選択してください', type: 'singleChoice', options: ['春','夏','秋','冬','未定'] },
-	  { key: 'time_band', label: '時間帯のご希望', type: 'singleChoice', options: ['昼食にパーティーを合わせたい','夕食にパーティーを合わせたい'] },
-	  { key: 'costume', label: '衣裳（複数可）', type: 'multiChoice', options: ['ウェディングドレス','カクテルドレス','白無垢','色打掛','タキシード','紋付袴'] },
-	  { key: 'groom_name', label: '新郎様のお名前（例：佐賀 太郎）', type: 'text', required:true },
-	  { key: 'bride_name', label: '新婦様のお名前（例：佐賀 花子）', type: 'text', required:true },
-	  { key: 'phone', label: '電話番号（ハイフン可）', type: 'tel', required:true },
-	  { key: 'email', label: 'メールアドレス', type: 'email', required:true },
-	  { key: 'address', label: 'ご住所（市区町村以降）', type: 'text', required:true },
-	  { key: 'has_kids', label: 'お子様はいらっしゃいますか？', type: 'singleChoice', options: ['あり','なし'] },
-	  { key: 'visit_1st', label: '来館希望日（第1希望）をカレンダーから選択してください', type: 'date', required:true },
-	  { key: 'visit_2nd', label: '来館希望日（第2希望）をカレンダーから選択してください', type: 'date', required:true },
-	  { key: 'consent', label: '個人情報保護方針に同意いただけますか？「同意します」と入力してください。', type: 'consent', required:true }
-	];
+  function bubble(txt,who='sys'){const d=document.createElement('div');d.className=who;d.textContent=txt;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
 
-	const widget=document.getElementById('chatWidget');
-	const launcher=document.getElementById('launcherBar');
-	const closeBtn=document.getElementById('chatClose');
-	const chat=document.getElementById('chat');
-	const textInput=document.getElementById('textInput');
-	const sendBtn=document.getElementById('sendBtn');
-	const overlay=document.getElementById('loadingOverlay');
-	const state={step:0,answers:{},busy:false,started:false};
-
-	function bubble(txt,who='sys'){ const d=document.createElement('div'); d.className=who; d.textContent=txt; chat.appendChild(d); chat.scrollTop=chat.scrollHeight; }
-	function todayISO(){ return new Date().toISOString().slice(0,10); }
-	function showLoading(){ overlay.classList.add('active'); textInput.disabled=true; sendBtn.disabled=true; }
-	function hideLoading(){ overlay.classList.remove('active'); textInput.disabled=false; sendBtn.disabled=false; }
-
-	function renderChoices(q){
-	  const wrap=document.createElement('div'); wrap.className='sys choices';
-	  if(q.type==='singleChoice'){
-		q.options.forEach(opt=>{ const b=document.createElement('button'); b.type='button'; b.className='pill'; b.textContent=opt; b.addEventListener('click',()=>handleAnswer(opt)); wrap.appendChild(b); });
-	  } else { 
-		const selected=new Set();
-		q.options.forEach(opt=>{ const b=document.createElement('button'); b.type='button'; b.className='pill'; b.textContent=opt; b.addEventListener('click',()=>{ b.classList.toggle('selected'); if(b.classList.contains('selected')) selected.add(opt); else selected.delete(opt); updateConfirm(); }); wrap.appendChild(b); });
-		const ok=document.createElement('button'); ok.type='button'; ok.className='pill confirm-pill'; ok.textContent='選択を確定';
-		function updateConfirm(){ const n=selected.size; if(n>0){ ok.classList.add('active'); ok.textContent=`選択を確定（${n}）`; } else { ok.classList.remove('active'); ok.textContent='選択を確定'; } }
-		ok.addEventListener('click',()=>handleAnswer(Array.from(selected)));
-		wrap.appendChild(ok); updateConfirm();
-	  }
-	  chat.appendChild(wrap); chat.scrollTop=chat.scrollHeight;
+  function renderChoices(q){
+	const wrap=document.createElement('div');wrap.className='sys choices';
+	if(q.type==='singleChoice'){
+	  q.options.forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='pill';b.textContent=opt;b.addEventListener('click',()=>{disableChoices(wrap);handleAnswer(opt);});wrap.appendChild(b)});
+	} else { // multiChoice
+	  const selected=new Set();
+	  q.options.forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='pill';b.textContent=opt;b.addEventListener('click',()=>{b.classList.toggle('selected');b.classList.contains('selected')?selected.add(opt):selected.delete(opt);updateConfirm();});wrap.appendChild(b)});
+	  const ok=document.createElement('button');ok.type='button';ok.className='pill confirm';ok.textContent='選択を確定';
+	  function updateConfirm(){const n=selected.size;if(n>0){ok.classList.add('active');ok.textContent=`選択を確定（${n}）`;}else{ok.classList.remove('active');ok.textContent='選択を確定';}}
+	  ok.addEventListener('click',()=>{disableChoices(wrap);handleAnswer(Array.from(selected));});wrap.appendChild(ok);
 	}
-
-	function start(){ state.started=true; bubble('ご相談ありがとうございます！いくつかの質問にお答えください。'); ask(); }
-
-	function ask(){ if(state.step>=FLOW.length){ return finish(); } const q=FLOW[state.step]; bubble(`Q${state.step+1}：${q.label}`); if(q.type==='singleChoice'||q.type==='multiChoice') renderChoices(q); textInput.type=q.type==='date'?'date':(q.type==='email'?'email':(q.type==='tel'?'tel':'text')); textInput.value=''; if(q.type==='date'){ textInput.min=todayISO(); textInput.value=todayISO(); } }
-
-	function handleAnswer(val){ if(state.busy) return; const q=FLOW[state.step]; const raw=(val!==undefined)? val : (textInput.value||'').trim(); if(q.required && (Array.isArray(raw)? raw.length===0 : !raw)){ bubble('必須入力です'); return; } bubble(Array.isArray(raw)? raw.join('、'):raw,'user'); state.answers[q.key]=raw; state.step++; state.busy=true; showLoading(); setTimeout(()=>{ hideLoading(); state.busy=false; ask(); },500); }
-
-	function finish(){ bubble('ありがとうございます！送信処理を行います…'); showLoading(); setTimeout(()=>{ hideLoading(); bubble('送信が完了しました！'); },1000); }
-
-	function openWidget(){ widget.classList.add('open'); launcher.setAttribute('aria-expanded','true'); if(!state.started){ start(); } }
-	function closeWidget(){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }
-	function toggleWidget(){ widget.classList.contains('open')? closeWidget(): openWidget(); }
-
-	launcher.addEventListener('click',toggleWidget);
-	launcher.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleWidget(); }});
-	closeBtn.addEventListener('click',closeWidget);
-	document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeWidget(); });
-  })();
-  </script>
-<!-- v1.5: 開閉安定フォールバック（文法エラーを避けるため独立スクリプトで上書き） -->
-<script>
-(function(){
-  function bind(){
-	var launcher = document.getElementById('launcherBar');
-	var widget   = document.getElementById('chatWidget');
-	if(!launcher || !widget) return;
-	function openWidget(){ widget.classList.add('open'); launcher.setAttribute('aria-expanded','true'); if(window.__startChat) try{ window.__startChat(); }catch(e){} }
-	function closeWidget(){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }
-	function toggleWidget(){ widget.classList.contains('open') ? closeWidget() : openWidget(); }
-	// 公開
-	window.toggleWidget = toggleWidget;
-	// バインド（重複登録を避けるため一旦既存を解除→再登録）
-	launcher.onclick = null;
-	launcher.addEventListener('click', toggleWidget);
-	launcher.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleWidget(); } });
-	document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeWidget(); });
+	chat.appendChild(wrap);chat.scrollTop=chat.scrollHeight;
   }
-  if(document.readyState==='complete' || document.readyState==='interactive') bind();
-  else document.addEventListener('DOMContentLoaded', bind, {once:true});
-})();
-</script>
-<!-- v1.5.2: 強制起動＆空時フォールバック。閉じた後も必ず再オープンで案内＋Q1を描画 -->
-<script>
-(function(){
-  function greetIfEmpty(){
-	try{
-	  var chat=document.getElementById('chat');
-	  if(!chat) return;
-	  if(chat.childElementCount===0){
-		// 直接描画（__bubbleが無くても最低限表示）
-		var d=document.createElement('div'); d.className='sys'; d.textContent='ご相談ありがとうございます！いくつかの質問にお答えください。'; chat.appendChild(d); chat.scrollTop=chat.scrollHeight;
-		if(window.__ask) try{ window.__ask(); }catch(e){}
-	  }
-	}catch(e){ console && console.warn && console.warn(e); }
-  }
-  function openNow(){
-	var launcher=document.getElementById('launcherBar');
-	var widget=document.getElementById('chatWidget');
-	if(widget){ widget.classList.add('open'); if(launcher) launcher.setAttribute('aria-expanded','true'); }
-	if(window.__startChat) try{ window.__startChat(); }catch(e){}
-	greetIfEmpty();
-  }
-  // 初回は閉じたままにする（自動オープン停止）
-  function boot(){ /* 何もしない */ }
-  if(document.readyState==='complete' || document.readyState==='interactive') boot();
-  else document.addEventListener('DOMContentLoaded', boot, {once:true});
 
-  // ランチャー再開時も保険
-  function bind(){
-	var launcher=document.getElementById('launcherBar');
-	var widget=document.getElementById('chatWidget');
-	if(!launcher||!widget) return;
-	function openWidget(){ widget.classList.add('open'); launcher.setAttribute('aria-expanded','true'); if(window.__startChat) try{ window.__startChat(); }catch(e){} greetIfEmpty(); }
-	function closeWidget(){ widget.classList.remove('open'); launcher.setAttribute('aria-expanded','false'); }
-	function toggleWidget(){ widget.classList.contains('open') ? closeWidget() : openWidget(); }
-	launcher.onclick = null; // 既存を解除
-	launcher.addEventListener('click', toggleWidget);
-	launcher.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleWidget(); } });
-	document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeWidget(); });
-	window.toggleWidget = toggleWidget;
+  function disableChoices(wrap){ wrap.querySelectorAll('button').forEach(b=>b.classList.add('disabled')); }
+
+  function ask(){
+	if(state.step>=FLOW.length){bubble('ありがとうございます！');return;}
+	const q=FLOW[state.step];
+	bubble(`Q${state.step+1}：${q.label}`);
+	if(q.type==='singleChoice'||q.type==='multiChoice') renderChoices(q);
   }
-  if(document.readyState==='complete' || document.readyState==='interactive') bind();
-  else document.addEventListener('DOMContentLoaded', bind, {once:true});
+
+  function handleAnswer(val){
+	const q=FLOW[state.step];
+	bubble(Array.isArray(val)?val.join('、'):val,'user');
+	state.answers[q.key]=val;state.step++;
+	// 送信演出：0.5秒スピナー
+	loading.classList.add('active');
+	setTimeout(()=>{ loading.classList.remove('active'); ask(); },500);
+  }
+
+  function openWidget(){widget.classList.add('open');launcher.setAttribute('aria-expanded','true');if(!state.started){state.started=true;bubble('ご相談ありがとうございます！いくつかの質問にお答えください。');ask();}}
+  function closeWidget(){widget.classList.remove('open');launcher.setAttribute('aria-expanded','false');}
+  function toggleWidget(){widget.classList.contains('open')?closeWidget():openWidget();}
+
+  launcher.addEventListener('click',toggleWidget);
+  closeBtn.addEventListener('click',closeWidget);
+  sendBtn.addEventListener('click',()=>handleAnswer(textInput.value.trim()));
 })();
 </script>
 </body>
