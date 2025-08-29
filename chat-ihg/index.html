@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ihg Best Match | フォーム→チャットボット化（v3.5 送信ガード：未選択で進まない）</title>
+  <title>Ihg chat | フォーム→チャットボット化（v3.5 送信ガード：未選択で進まない）</title>
   <link rel="icon" href="data:,">
   <style>
 	:root{--teal:#0e7490;--hdr:#083344;--blue:#2563eb;}
@@ -79,8 +79,23 @@
   const closeBtn=document.getElementById('closeBtn');
   const loading=document.getElementById('loading');
 
-  // サンクスページURL（デフォルト: 同ディレクトリのthanks.html）。?thanks= で上書き可能
-  const THANKS_URL = (()=>{ try{ const u=new URL(location.href); return u.searchParams.get('thanks') || 'thanks.html'; }catch(_){ return 'thanks.html'; } })();
+  import React, { useMemo, useState } from "react";
+  import { motion, AnimatePresence } from "framer-motion";
+  import { Check, ChevronLeft, ChevronRight, Send, Loader2 } from "lucide-react";
+  
+  // === 設定 =============================================================
+  // サンクスページURL（デフォルト: 外部URL）。?thanks= で上書き可能
+  const THANKS_URL = (() => {
+	try {
+	  const u = new URL(location.href);
+	  return u.searchParams.get("thanks") || "https://islandhills.jp/contact-thanks-bot/";
+	} catch (_) {
+	  return "https://islandhills.jp/contact-thanks-bot/";
+	}
+  })();
+  
+  // 以降は前回のチャットボット本体コードと同様 ===========================
+  // （中略: 他のコード部分は変更なし）
 
   function bubble(txt,who='sys'){const d=document.createElement('div');d.className=who;d.textContent=txt;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
   const todayISO=()=>new Date().toISOString().slice(0,10);
