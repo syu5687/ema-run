@@ -6,7 +6,7 @@
 	margin-top: -74px; /* ヘッダーの高さに合わせて調整 */
 
 	/* ▼▼▼ ここから背景画像の設定 ▼▼▼ */
-	background-image: url('/_assets/img/index/top_pc.jpg?2'); /* 実際の画像URLに書き換えてください */
+	background-image: url('./_assets/img/index/top_pc.jpg?2'); /* 実際の画像URLに書き換えてください */
 	background-size: cover;           /* 領域を完全に覆うように画像を拡大・縮小 */
 	background-position: center;      /* 画像の中央を基準に表示 */
 	background-repeat: no-repeat;     /* 画像を繰り返さない */
