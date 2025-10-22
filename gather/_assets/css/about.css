@@ -89,8 +89,14 @@ body, h1, h2, p, ul {
 	width: 250px;
 	text-align: right;
 	padding-right: 30px;
-	font-weight: bold;
 }
+
+.shop-info .shop-title dt {
+	font-weight: bold;
+	font-family: Itc-avant-garde-gothic-pro;
+}
+
+
 .shop-info dd {
 	width: 250px;
 	text-align: left;
