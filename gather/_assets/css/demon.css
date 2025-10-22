@@ -170,25 +170,28 @@ body, h1, h2, p, ul {
 
 	/* 会社概要 */
 	.company-profile {
-		padding-top: 40px;
-		padding-bottom: 40px;
+		padding: 0 3%;
 	}
 	.company-profile h2 {
 		font-size: 18px; /* フォントサイズを調整 */
 	}
 	.company-profile dl div {
 		flex-direction: column; /* flexの方向を縦に変更し、項目と内容が縦に並ぶようにする */
-		margin-bottom: 15px; /* 各項目の間隔を調整 */
+		margin-bottom: 25px; /* 各項目の間隔を調整 */
 	}
 	.company-profile dt,
 	.company-profile .company-name dt {
 		width: 100%; /* 横幅を100%に */
-		padding: 0 0 8px; /* 下に少し余白を持たせる */
+		padding: 0; /* 下に少し余白を持たせる */
 	}
 	
-	.company-profile dt::before {
+	.company-profile dt:first-child::after {
+		content: none;
+	}
+	
+	.company-profile dt::after {
 		content: ":";
-		padding-left: 30px;
+		padding-left: 10px;
 	}
 	
 	.company-profile dd {
