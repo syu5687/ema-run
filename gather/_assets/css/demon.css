@@ -184,14 +184,12 @@ body, h1, h2, p, ul {
 	.company-profile .company-name dt {
 		width: 100%; /* 横幅を100%に */
 		padding: 0 0 8px; /* 下に少し余白を持たせる */
-		font-weight: bold; /* 項目名を太字にして分かりやすくする */
 	}
 	.company-profile dd {
 		padding: 0; /* 余白をリセット */
 	}
 	/* ddの前の「:」を非表示にする */
 	.company-profile dd::before {
-		content: none;
 	}
 	.company-profile .office {
 		margin: 20px 0;
