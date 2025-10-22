@@ -86,7 +86,7 @@ body, h1, h2, p, ul {
 	margin-bottom: 20px;
 }
 .shop-info dt {
-	width: 200px;
+	width: 220px;
 	text-align: right;
 	padding-right: 30px;
 	text-align: left;
@@ -97,6 +97,7 @@ body, h1, h2, p, ul {
 	font-family: Itc-avant-garde-gothic-pro;
 	letter-spacing: 0.5rem;
 	text-align: left;
+	font-size: 19px
 }
 
 
@@ -172,5 +173,15 @@ body, h1, h2, p, ul {
 	.shop-info dt {
 		padding-right: 0;
 		margin-bottom: 10px;
+	}
+	
+	.shop-info .shop-title dt {
+		text-align: center;
+		font-size: 18px;
+		margin-bottom: 10px;		
+	}
+	
+	.shop-info .shop-title dt:last-child {
+		margin-top: 30px;		
 	}
 }

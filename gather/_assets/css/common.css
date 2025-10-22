@@ -373,7 +373,7 @@ img.full-width {
     .footer-right .follow-us a img {
         width: 14px;
         height: 14px;
-        padding-right: 0px;
+        padding-right: 5px;
     }
     
     /* コピーライトをフッター下中央に */
