@@ -170,7 +170,7 @@ footer {
 .footer-right .follow-us p {
     margin-bottom: 10px;
     font-size: 18px;
-    font-weight: 200;
+    font-weight: initial;
 }
 
 .footer-right .follow-us a {
@@ -179,6 +179,9 @@ footer {
     text-decoration: none;
     color: #333;
     margin-bottom: 30px;
+    font-size: 18px;
+    font-weight: initial;
+    letter-spacing: 0.1rem;
 }
 
 .footer-right .follow-us img {
