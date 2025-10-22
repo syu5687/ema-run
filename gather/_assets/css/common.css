@@ -314,7 +314,7 @@ img.full-width {
 
     /* フッター */
     footer {
-        padding: 30px 20px 120px;
+        padding: 30px 20px 30px;
         position: relative;
 
     }
@@ -337,12 +337,12 @@ img.full-width {
     
     .footer-left {
         border-right: 1px solid #231815; /* 中央の縦線 */
-        padding-right: 20px;
+        padding-right: 0px;
         margin: 0;
     }
     
     .footer-right {
-        padding-left: 20px;
+        padding-left: 5px;
         align-items: flex-start;
     }
     
@@ -350,7 +350,7 @@ img.full-width {
     .footer-left nav a {
         font-size: 14px;
         letter-spacing: 0.1em;
-        margin: 0;
+        margin-bottom: 5px;
         display: block;
     }
     
@@ -370,14 +370,14 @@ img.full-width {
     .footer-right .follow-us a img {
         width: 14px;
         height: 14px;
-        margin-right: 0px;
+        padding-right: 0px;
     }
     
     /* コピーライトをフッター下中央に */
     .footer-copyright-wrapper {
         width: 100%;
         text-align: center;
-        margin-top: 80px;
+        margin-top: 130px;
     }
     
     .footer-copyright-wrapper .copyright.sp {
