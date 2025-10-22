@@ -1,0 +1,395 @@
+/* 基本的なスタイルリセット */
+body, h1, h2, p, ul {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+body {
+    line-height: 1.6;
+    color: #333;
+}
+
+.sp {
+    display: none;
+}
+.pc {
+    display: block;
+}
+
+/* ヘッダー */
+header {
+    /* 背景を全幅にするため、レイアウト関連の指定は削除 */
+    position: sticky;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 新しく追加したヘッダーの中身を収めるコンテナ */
+.header-container {
+    max-width: 1100px; /* 中身の最大幅 */
+    margin: 0 auto;    /* コンテナ自体を中央揃え */
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    padding: 20px 0; /* ヘッダーの上下の高さ（余白） */
+}
+
+header .logo {
+    font-family: "itc-avant-garde-gothic-pro", sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff;
+    letter-spacing: 11px;
+}
+
+/* PC用ナビゲーション */
+.pc-nav {
+    display: flex;
+    align-items: center;
+}
+
+.pc-nav img {
+    width: 14px;
+    height: 100%;
+    padding-right: 10px;
+}
+
+.pc-nav a {
+    font-family: "itc-avant-garde-gothic-pro", sans-serif;
+    font-weight: initial;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #fff;
+    font-size: 13px;
+    letter-spacing: 3px;
+}
+
+.pc-nav a:not(:first-child)::before {
+    content: '|';
+    margin: 0 15px;
+    color: #fff;
+}
+/* ハンバーガーメニューボタン（最初は非表示） */
+.hamburger-btn {
+    display: none; /* PCでは非表示 */
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 26px;
+    height: 26px;
+    position: relative;
+    z-index: 1001; /* メニューより手前に */
+}
+
+.hamburger-btn span {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #fff;
+    position: absolute;
+    transition: all 0.3s;
+}
+
+.hamburger-btn span:nth-child(1) { top: 0; }
+.hamburger-btn span:nth-child(2) { top: 9px; }
+.hamburger-btn span:nth-child(3) { top: 19px; }
+
+/* スマートフォン用ナビゲーション（最初は非表示） */
+.mobile-nav {
+    display: none; /* PCでは非表示 */
+}
+
+/* フッター */
+footer {
+    padding: 30px 40px 120px;
+    background-color: #f0f0f0; /* カンプに合わせた背景色 */
+    color: #231815; /* 文字色を少し濃くする */
+    font-family: "itc-avant-garde-gothic-pro", sans-serif;
+    font-weight: 400; /* Bookウェイトを指定 */
+    font-size: 14px;
+    letter-spacing: 0.05em; /* 文字間隔を少し広げる */
+}
+
+.footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex; /* Flexboxを有効化 */
+    justify-content: flex-start;
+}
+
+.footer-left {
+    display: flex;
+    align-items: center; /* 垂直方向の中央揃え */
+    padding-right: 40px;
+    border-right: 1px solid #231815; /* 中央の区切り線 */
+    font-family: "itc-avant-garde-gothic-pro", sans-serif;
+}
+
+.footer-left nav a {
+    display: block;
+    font-size: 18px;
+    font-weight: 200;
+    letter-spacing: 0.2em;
+    margin-bottom: 15px;
+    text-decoration: none;
+    color: #231815;
+    font-family: "itc-avant-garde-gothic-pro", sans-serif;
+}
+
+.footer-left nav a:last-child {
+    margin-bottom: 0; /* 最後のリンクの下余白をなくす */
+    font-weight: 200;
+    font-family: "itc-avant-garde-gothic-pro", sans-serif;
+    letter-spacing: 0.2em;
+    
+}
+
+.footer-right {
+    padding-left: 40px;
+    display: flex;
+    flex-direction: column; /* 要素を縦に並べる */
+    justify-content: center; /* 垂直方向の中央揃え */
+}
+
+.footer-right .follow-u {
+    letter-spacing: 0.2em;
+}
+
+.footer-right .follow-us svg {
+    color: #fff;
+}
+
+.footer-right .follow-us p {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 200;
+}
+
+.footer-right .follow-us a {
+    display: flex;
+    align-items: center; /* アイコンとテキストを中央揃え */
+    text-decoration: none;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.footer-right .follow-us img {
+    width: 14px;
+    height: auto;
+    padding-right: 10px;
+}
+
+.footer-right .copyright {
+    font-size: 12px;
+    font-weight: 400;
+    color: #231815;
+    letter-spacing: 0.2em;
+    font-family: "itc-avant-garde-gothic-pro", sans-serif;
+}
+
+
+/* メインコンテンツ */
+main {
+    padding: 0; 
+}
+
+.container {
+    max-width: 1000px; /* コンテンツの最大幅 */
+    margin: 100px auto 0;    /* 中央揃え */
+    padding: 0 40px;   /* 左右の余白 */
+}
+
+h1, h2 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+img.full-width {
+    width: 100%;
+    height: auto;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+    
+    .sp {
+        display: block;
+    }
+    .pc {
+        display: none;
+    }
+
+    /* ヘッダー */
+    header {
+        padding: 15px 20px;
+    }
+    
+    .header-container {
+        padding: 5px;
+    }
+    
+    .pc-nav {
+        display: none; /* PC用ナビゲーションを非表示 */
+    }
+    
+    .hamburger-btn {
+        display: block; /* ハンバーガーメニューを表示 */
+    }
+    
+    .mobile-nav {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        position: fixed;
+        top: 0;
+        left: 100%;
+        padding: 35%  15% 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 0.95);
+        transition: left 0.4s ease;
+        z-index: 1000;
+    }
+    
+    .mobile-nav.is-active {
+        left: 15%;
+        width: 85%;
+        padding: 35%  15% 0;
+    }
+    
+    .mobile-nav a {
+        font-family: "itc-avant-garde-gothic-pro", sans-serif;
+        font-size: 16px;
+        letter-spacing: 0.2em;
+        margin: 8px 0;
+        text-decoration: none;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+    
+    .mobile-nav img {
+        width: 14px;
+        height: 100%;
+        padding-right: 10px;
+    }
+
+    
+    /* ハンバーガーメニューがアクティブ（×印）の時のスタイル */
+    .hamburger-btn.is-active span:nth-child(1) {
+        background-color: #231815;
+        top: 11px;
+        transform: rotate(45deg);
+    }
+    .hamburger-btn.is-active span:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger-btn.is-active span:nth-child(3) {
+        background-color: #231815;
+        top: 11px;
+        transform: rotate(-45deg);
+    }
+
+    /* メインコンテンツ */
+    main {
+        padding: 0; /* 全体の余白を少し狭くする */
+    }
+
+    h1 {
+        font-size: 24px; /* 見出しを少し小さくする */
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    /* フッター */
+    footer {
+        padding: 30px 20px 120px;
+        position: relative;
+
+    }
+    
+    .footer-container {
+        flex-direction: row; /* 左右を横並びに */
+        justify-content: center; /* 中央揃え */
+        align-items: flex-start;
+        gap: 10px; /* 左右の余白 */
+        border-bottom: none; /* 下線はなし */
+    }
+    
+    .footer-left,
+    .footer-right {
+        display: flex;
+        flex-direction: column; /* リンクを縦積み */
+        width: 100%;
+        gap: 0px;
+    }
+    
+    .footer-left {
+        border-right: 1px solid #231815; /* 中央の縦線 */
+        padding-right: 20px;
+        margin: 0;
+    }
+    
+    .footer-right {
+        padding-left: 20px;
+        align-items: flex-start;
+    }
+    
+    /* 左右リンク */
+    .footer-left nav a {
+        font-size: 14px;
+        letter-spacing: 0.1em;
+        margin: 0;
+        display: block;
+    }
+    
+    .footer-right .follow-us a {
+        width: 170px;
+        font-size: 14px;
+        letter-spacing: 0.1em;
+        margin: 0;
+        display: block;
+    }
+    
+    .footer-right .follow-us p {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .footer-right .follow-us a img {
+        width: 14px;
+        height: 14px;
+        margin-right: 0px;
+    }
+    
+    /* コピーライトをフッター下中央に */
+    .footer-copyright-wrapper {
+        width: 100%;
+        text-align: center;
+        margin-top: 80px;
+    }
+    
+    .footer-copyright-wrapper .copyright.sp {
+        font-size: 12px;
+        font-weight: 400;
+        color: #231815;
+        letter-spacing: 0.1em;
+        font-family: "itc-avant-garde-gothic-pro", sans-serif;
+        bottom: 0;
+    }
+    
+    footer nav  {
+        width: 140px;
+    }
+}

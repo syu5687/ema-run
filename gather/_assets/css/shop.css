@@ -1,0 +1,241 @@
+/* =================================== */
+/* SHOP PAGE
+/* =================================== */
+
+body, h1, h2, p, ul {
+	margin: 0;
+	padding: 0;
+	font-family: "itc-avant-garde-gothic-pro", sans-serif;
+	font-weight: 400;
+}
+.sp {
+	display: none;
+}
+.pc {
+	display: block;
+}
+
+.top {
+	width: 100%;
+	height: 450px;
+	background-image: url('../img/shop/top_shop_pc.jpg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin-top: 30px;
+}
+
+/* メインコンテンツのコンテナ */
+.container {
+	max-width: 1000px; /* ★ コンテンツ全体の幅を1000pxに */
+	margin: 0 auto;
+	padding: 0 20px 200px;
+}
+
+/* ページタイトル */
+.page-title {
+	padding: 80px 0 10px 0;
+	text-align: center;
+}
+.page-title h1 {
+	font-size: 24px;
+	letter-spacing: 0.2em;
+	margin-bottom: 30px;
+}
+.page-title p {
+	font-size: 15px;
+	line-height: 1.5;
+	margin-bottom: 20px;
+}
+
+/* 店舗リスト */
+.shop-list {
+}
+
+.shop-item {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 60px 0;
+}
+
+/* 店舗情報の左側（画像） */
+.shop-image img {
+	width: 250px; /* ★ 写真の幅を160pxに */
+	height: 250px; /* ★ 写真の高さを160pxに */
+	object-fit: cover; /* 比率を保ったままトリミング */
+}
+
+/* 店舗情報の右側（詳細） */
+.shop-details {
+	width: 400px;
+	padding: 0 0 0 50px;
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-weight: 400;
+}
+.shop-details h2 {
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-weight: 400;
+	text-align: left;
+	font-size: 22px;
+	letter-spacing: 3px;
+}
+.shop-details .shop-description {
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-size: 15px;
+	line-height: 1.8;
+	margin-bottom: 10px;
+}
+.shop-details dl {
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-size: 14px;
+	line-height: 1.6;
+	margin-bottom: 30px;
+	margin-top: 0px;
+}
+.shop-details dd {
+	margin-bottom: 0px; /* 各項目の下の余白 */
+	margin-inline-start: 0;
+}
+.shop-details .insta-links a {
+	display: flex;
+	margin-right: 15px; /* リンク間の余白 */
+}
+.shop-details dd a {
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-size: 15px;
+	font-weight: 700;
+	text-decoration: none;
+	color: #333;
+}
+.shop-details .map-link {
+	display: inline-block;
+	padding: 0; /* ★ 枠線と内側の余白を削除 */
+	border: none; /* ★ 枠線を削除 */
+	color: #2F318E;
+	text-decoration: none;
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-weight: 300;
+	font-size: 14px;
+}
+
+.page-instagram {
+	padding: 60px 0;
+	text-align: center;
+}
+
+.page-instagram h2 {
+	font-size: 22px;
+	letter-spacing: 0.1em;
+	margin-bottom: 20px;
+}
+
+.page-instagram .insta-accounts a {
+	display: block;
+	margin-bottom: 10px;
+	color: #333;
+	text-decoration: none;
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-size: 18px;
+	letter-spacing: 1px;
+}
+
+.page-instagram .insta-accounts p {
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-size: 13px;
+}
+
+/* =================================== */
+/* レスポンシブ (768px以下)
+/* =================================== */
+@media (max-width: 768px) {
+	.sp {
+		display: block;
+	}
+	.pc {
+		display: none;
+	}
+	.top {
+		height: 200px; /* トップの高さを調整 */
+		margin-top: 0;
+	}
+	
+	.container {
+		padding: 0 20px; /* 左右の余白を調整 */
+	}
+	
+	/* ページタイトル */
+	.page-title {
+		padding: 40px 0;
+	}
+	.page-title h1 {
+		font-size: 20px;
+	}
+	.page-title p {
+		font-size: 14px;
+	}
+	
+	/* 店舗リスト */
+	.shop-item {
+		flex-direction: column; /* 縦積みに変更 */
+		align-items: center;    /* 全体を中央揃え */
+		padding: 40px 0;
+		gap: 20px;
+	}
+	
+	.shop-image img {
+		width: 150px;
+		height: 150px;
+		aspect-ratio: 4 / 3; /* 画像の比率を調整 */
+	}
+	
+	/* 店舗情報の詳細 */
+	.shop-details {
+		width: 100%; /* 幅を100%に */
+		padding: 0;
+	}
+	.shop-details h2 {
+		ffont-size: 18px;
+		text-align: center;
+		letter-spacing: inherit;
+	}
+	.shop-details .shop-description {
+		font-size: 14px;
+		text-align: center;
+		line-height: inherit;
+		letter-spacing: inherit;
+	}
+	.shop-details dl {
+		font-size: 13px;
+		text-align: center;
+		margin-bottom: 20px;
+	}
+	.shop-details .map-link {
+		/* 中央に配置するための設定 */
+		display: block;
+		text-align: center;
+	}
+	.shop-details .insta-links {
+		text-align: center;
+	}
+	.shop-details .insta-links a {
+		display: inline-block; /* 横並びに戻す */
+	}
+	
+	/* Instagramセクション */
+	.page-instagram {
+		padding: 40px 0;
+	}
+	.page-instagram img {
+		width: 25px; /* アイコンサイズ調整 */
+	}
+	.page-instagram h2 {
+		font-size: 18px;
+	}
+	.page-instagram .insta-accounts p {
+		font-size: 14px;
+	}
+	.page-instagram .insta-accounts a {
+		font-size: 15px;
+	}
+}

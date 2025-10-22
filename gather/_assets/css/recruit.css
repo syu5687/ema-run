@@ -1,0 +1,190 @@
+/* =================================== */
+/* RECRUIT PAGE
+/* =================================== */
+
+body, h1, h2, h3, h4, p, dl, dt, dd {
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-weight: 400;
+	letter-spacing: 0.1em;
+}
+
+/* トップ画像 */
+.top {
+	width: 100%;
+	height: 450px;
+	background-image: url('../img/recruit/top_rectuit_pc.jpg');
+	background-size: cover;
+	background-position: center;
+	margin-top: 30px;
+}
+
+/* コンテンツコンテナ */
+.container {
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 0 20px 200px;
+}
+
+/* ページタイトル */
+.page-title {
+	padding: 80px 0;
+	text-align: center;
+}
+.page-title h1 {
+	font-family: "itc-avant-garde-gothic-pro", sans-serif;
+	font-size: 22px;
+	font-weight: 400;
+	letter-spacing: 8px;
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+/* 募集情報セクション */
+.recruit-info {
+	max-width: 800px;
+	margin: 0 auto;
+}
+.recruit-info .sub-title {
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-size: 20px;
+	text-align: left;
+	margin-bottom: 30px;
+	font-weight: initial;
+}
+.recruit-info .sub-title span{
+	font-family: "itc-avant-garde-gothic-pro", sans-serif;
+	font-weight: 700;
+	letter-spacing: 10px;
+}
+.recruit-info .category-title {
+	font-size: 18px;
+	text-align: left;
+	margin-bottom: 50px;
+	letter-spacing: 5px;
+}
+
+/* 募集カード */
+.job-card {
+	padding: 40px;
+	margin-bottom: 40px;
+}
+.job-card h4 {
+	font-size: 18px;
+	margin-bottom: 30px;
+	text-align: left;
+}
+.job-card dl div {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 15px;
+	font-size: 16px;
+	line-height: 1.8;
+}
+.job-card dt {
+	width: 75px;
+	text-align-last: justify;
+	margin-right: 50px;
+}
+.job-card dd {
+	flex: 1;
+	margin: 0;
+	max-width: 350px;
+}
+
+.job-card dd::before {
+	margin-right: 15px;
+	content: ":";
+}
+
+.job-option dd {
+	margin-left: 40px;
+}
+
+.job-option dd::before {
+	content: none;
+}
+
+.job-student dd::before {
+	content: none;
+}
+
+/* 問い合わせ情報 */
+.contact-info {
+	margin-top: 80px;
+	text-align: left;
+}
+.contact-info .contact-title {
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
+.contact-info .contact-title span {
+	font-weight: bold;
+}
+
+.contact-info .contact-detail {
+	margin-left: 50px;
+}
+
+
+/* =================================== */
+/* RECRUIT PAGE (SP)
+/* Base Breakpoint: 768px
+/* =================================== */
+@media screen and (max-width: 768px) {
+	
+	/* トップ画像 */
+	.top {
+		height: 250px; /* スマートフォンでは高さを少し低く調整 */
+		margin-top: 0;
+	}
+	
+	/* コンテンツコンテナ */
+	.container {
+		padding: 0 15px 100px; /* 左右の余白を狭く、下の余白も調整 */
+	}
+
+
+	.page-title {
+		padding: 40px 0;
+	}
+	.page-title h1 {
+		font-size: 20px;
+		letter-spacing: 5px;
+	}
+
+	.recruit-info .sub-title {
+		font-size: 18px;
+	}
+	.recruit-info .category-title {
+		font-size: 16px;
+		margin-bottom: 40px;
+	}
+
+	.job-card {
+		padding: 0 20px 20px 20px;
+	}
+	.job-card h4 {
+		font-size: 15px;
+	}
+	.job-card dl div {
+		flex-direction: inherit;
+		font-size: 15px;
+	}
+	.job-card dt {
+		width: 80px;
+		margin-bottom: 5px;
+		margin-right: 20px;
+	}
+	
+	.job-option dd {
+		margin-left: 20px;
+	}
+
+	.contact-info {
+		margin-top: 60px;
+	}
+	.contact-info .contact-detail {
+		font-size: 18px;
+	}
+}

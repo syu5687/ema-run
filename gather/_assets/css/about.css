@@ -1,0 +1,174 @@
+/* =================================== */
+/* ABOUT PAGE
+/* =================================== */
+
+body, h1, h2, p, ul {
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-weight: 400;
+}
+
+/* トップ画像 */
+.top {
+	width: 100%;
+	height: 450px;
+	background-image: url('../img/about/top_about_pc.jpg');
+	background-size: cover;
+	background-position: center;
+	margin-top: 30px;
+}
+
+/* コンテンツコンテナ */
+.container {
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 0 20px 200px;
+}
+
+
+
+/* ページタイトル */
+.page-title {
+	padding: 80px 0;
+	text-align: center;
+}
+.page-title h1 {
+	font-family: "itc-avant-garde-gothic-pro", sans-serif;
+	font-size: 50px;
+	font-weight: 700;
+	letter-spacing: 48px;
+}
+
+/* コンセプト */
+.concept {
+	text-align: center;
+	margin-bottom: 80px;
+}
+.concept-subtitle {
+	font-family: "Shippori Mincho B1", serif;
+	font-size: 23px;
+	letter-spacing: 10px;
+	margin-bottom: 40px;
+}
+.concept-text {
+	font-family: "Shippori Mincho B1", serif;
+	line-height: 2.5rem;
+	font-size: 16px;
+}
+
+/* 周年記念 */
+.anniversary {
+	text-align: center;
+	margin-bottom: 100px;
+}
+.anniversary p {
+	font-family: "Shippori Mincho B1", serif;
+	line-height: 2.2rem;
+	font-weight: 500;
+}
+
+/* 店舗情報 */
+.shop-info {
+	max-width: 800px;
+	margin: 0 auto;
+}
+.shop-info h2 {
+	font-family: "itc-avant-garde-gothic-pro", sans-serif;
+	font-size: 22px;
+	font-weight: 100;
+	letter-spacing: 8px;
+	text-align: center;
+	margin-bottom: 40px;
+}
+.shop-info dl div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 20px;
+}
+.shop-info dt {
+	width: 250px;
+	text-align: right;
+	padding-right: 30px;
+	font-weight: bold;
+}
+.shop-info dd {
+	width: 250px;
+	text-align: left;
+	margin: 0;
+}
+.shop-info .head-office {
+	margin-top: 40px;
+	align-items: flex-start;
+}
+.shop-info .head-office dd {
+	line-height: 1.8rem;
+}
+
+
+/* =================================== */
+/* ABOUT PAGE (SP)
+/* Base Breakpoint: 768px
+/* =================================== */
+@media screen and (max-width: 768px) {
+	/* トップ画像 */
+	.top {
+		height: 250px; /* スマートフォンでは高さを少し低く調整 */
+		margin-top: 0;
+	}
+	
+	/* コンテンツコンテナ */
+	.container {
+		padding: 0 15px 100px; /* 左右の余白を狭く、下の余白も調整 */
+	}
+
+
+	.page-title {
+		padding: 40px 0;
+	}
+	.page-title h1 {
+		font-size: 20px;
+		letter-spacing: 5px;
+	}
+
+	.concept {
+		margin-bottom: 60px;
+	}
+	.concept-subtitle {
+		font-size: 18px;
+		letter-spacing: 4px;
+		margin-bottom: 30px;
+	}
+	.concept-text {
+		font-size: 14px;
+		line-height: 2rem;
+	}
+
+	.anniversary {
+		margin-bottom: 80px;
+	}
+	.anniversary p {
+		font-size: 16px;
+	}
+
+	.shop-info h2 {
+		font-size: 20px;
+		letter-spacing: 4px;
+	}
+	.shop-info dl div {
+		flex-direction: column;
+		align-items: center;
+		margin-bottom: 30px;
+	}
+	.shop-info dt,
+	.shop-info dd {
+		width: 100%;
+		text-align: center;
+	}
+	.shop-info dt {
+		padding-right: 0;
+		margin-bottom: 10px;
+	}
+	.shop-info .head-office {
+		margin-top: 30px;
+	}
+}

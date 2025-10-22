@@ -1,0 +1,299 @@
+/*トップ*/
+.top {
+	position: relative;
+	width: 100%;
+	height: 570px;
+	margin-top: -74px; /* ヘッダーの高さに合わせて調整 */
+
+	/* ▼▼▼ ここから背景画像の設定 ▼▼▼ */
+	background-image: url('/_assets/img/index/top_pc.jpg?2'); /* 実際の画像URLに書き換えてください */
+	background-size: cover;           /* 領域を完全に覆うように画像を拡大・縮小 */
+	background-position: center;      /* 画像の中央を基準に表示 */
+	background-repeat: no-repeat;     /* 画像を繰り返さない */
+}
+
+.top-text {
+	font-family: "itc-avant-garde-gothic-pro", sans-serif;
+	position: absolute;
+	bottom: -16px;
+	left: 150px;
+	color: white;
+	font-size: 6vw;
+	font-weight: bold;
+	line-height: 1;
+	margin: 0;
+	letter-spacing: 4vw;
+}
+
+.container h2 {
+	font-family: "garamond-premier-pro", serif;
+	font-size: 25px;
+	font-weight: 100;
+	letter-spacing: 10px;
+}
+
+.container p {
+	font-family: "Shippori Mincho B1", serif;
+	text-align: center;
+	margin-bottom: 40px;
+	font-size: 23px;
+	font-weight: initial;
+	letter-spacing: 10px;
+}
+
+
+/*インスタグラム*/
+.instagram-section {
+	padding: 60px 40px;
+	text-align: center;
+}
+
+.instagram-section .container h2 {
+	font-family: "itc-avant-garde-gothic-pro", sans-serif;
+	font-size: 18px;
+	font-weight: normal;
+	letter-spacing: 0.2em;
+	margin-bottom: 20px;
+}
+
+.instagram-grid {
+	display: grid;
+	/* 5列のグリッドを作成 */
+	grid-template-columns: repeat(5, 1fr);
+	gap: 10px; /* 画像間の余白 */
+}
+
+.insta-post img {
+	width: 100%;
+	height: 100%;
+	/* 画像を正方形に保つ */
+	aspect-ratio: 1 / 1;
+	/* アスペクト比が異なる画像もきれいに収める */
+	object-fit: cover;
+	display: block; /* 画像下の余分な余白を削除 */
+}
+
+.brand-section {
+	padding: 60px 40px;
+	background-color: #ffffff;
+}
+
+.brand-section .container h2 {
+	text-align: center;
+	font-size: 24px;
+	font-weight: normal;
+	letter-spacing: 0.1em;
+	margin-bottom: 50px; /* ロゴとの余白を少し広げる */
+}
+
+.brand-logos {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+
+.realestate-section {
+	padding: 80px 0; /* 上下の余白 */
+	text-align: center;
+}
+
+.realestate-image-wrapper {
+	position: relative; /* テキストを重ねるための基準 */
+	text-align: center; /* 中のテキストを中央揃え */
+	color: white;
+}
+
+.realestate-image-wrapper img {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.realestate-text-content {
+	margin-top: 40px; /* 画像とテキストの間の余白 */
+}
+
+.realestate-text-content p {
+	font-family: 'Garamond Premier Pro', serif; /* Garamondフォントを指定 */
+	letter-spacing: 0.5em;
+	font-size: 16px;
+	margin-bottom: 20px;
+}
+
+.realestate-text-content h2 {
+	font-size: 18px;
+	font-weight: initial;
+	margin-bottom: 30px;
+	letter-spacing: 0.2em;
+}
+
+.realestate-link {
+	font-family: 'Garamond Premier Pro', serif;
+	text-decoration: none;
+	color: #555;
+	letter-spacing: 0.2em;
+}
+
+
+
+/* ▼▼▼ ここからが円形にするためのスタイル ▼▼▼ */
+.logo-item {
+	width: 100px;       /* 円の直径（横幅） */
+	height: 100px;      /* 円の直径（高さ） */
+	border-radius: 50%; /* この指定で要素が正円になる */
+	
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background-color: #f8f8f8; /* 円の背景色（任意） */
+	border: 1px solid #eee;   /* 円の境界線（任意） */
+	
+	transition: all 0.3s ease; /* アニメーション効果 */
+}
+
+/* 円の中に配置するロゴ画像のスタイル */
+.logo-item img {
+	max-width: 90px;  /* ロゴが円からはみ出さないように調整 */
+	max-height: 90px; /* ロゴが円からはみ出さないように調整 */
+	height: auto;
+	filter: grayscale(100%);
+	opacity: 0.8;
+	transition: all 0.3s ease;
+}
+
+/* マウスカーソルを乗せた時のエフェクト */
+.logo-item:hover {
+	background-color: #fff;
+	border-color: #333;
+}
+
+.logo-item:hover img {
+	filter: grayscale(0%);
+	opacity: 1;
+}
+
+
+@media (max-width: 768px) {
+		
+	.container {
+		margin: 50px auto 0;
+		padding: 0;
+	}
+	
+	
+		
+	.instagram-section .container h2,.brand-section .container h2{
+		font-size: 16px;
+		letter-spacing: 0.2em;
+		margin-bottom: 20px;
+		font-family: "itc-avant-garde-gothic-pro", sans-serif;
+	}
+	.container h2{
+		font-size: 16px;
+		letter-spacing: 0.2em;
+		margin-bottom: 20px;
+		font-family: "garamond-premier-pro", serif;
+	}
+	
+	.container p{
+		font-size: 20px;
+		letter-spacing: 0.4em;
+	}
+	
+	
+	.top-text {
+		font-size: 10vw;
+		bottom: -5px;
+		left: 12px;
+		letter-spacing: 3vw;
+	}
+	
+	.instagram-section {
+		padding: 10px 0;
+		text-align: center;
+	}
+	
+	.instagram-section .container {
+		padding: 0 10px;
+	}
+	
+	.brand-logos {
+		justify-content: center;
+		gap: 15px;
+	}
+	
+	.realestate-image-text {
+		font-size: 8vw;
+	}
+	.realestate-text-content h2 {
+		font-size: 16px;
+	}
+	
+	.brand-section{
+		padding: 0;
+	}
+	.brand-logos {
+		display: flex; /* Flexboxを有効化 */
+		flex-wrap: wrap; /* 要素の折り返しを有効化 */
+		justify-content: center; /* 全体を中央揃え */
+		gap: 8px;
+	}
+	
+	/* 既存の .logo-item の flex-basis 指定は削除します */
+	.logo-item {
+		aspect-ratio: 1 / 1; /* ★ この行を追加して、縦横比を1:1に固定します */
+		
+		border-radius: 50%; /* 縦横比が1:1なので、常に正円になります */
+		
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		
+		background-color: #f8f8f8;
+		border: 1px solid #eee;   
+		
+		transition: all 0.3s ease;
+	}
+	
+	.logo-item img{
+		/* ここには円形にするためのスタイルなどが残ります */
+		width: 100%;
+		height: 100%;
+		max-width: 150px;
+		max-height: 150px;
+		/* 他のスタイル... */
+	}
+
+	
+	/* ▼▼▼ ここからがレイアウト指定 ▼▼▼ */
+	
+	/* 1番目から3番目までのロゴアイテム */
+	.logo-item:nth-child(-n+3) {
+		flex-basis: calc(33.333% - 50px);
+	}
+	
+	/* 4番目以降のロゴアイテム */
+	.logo-item:nth-child(n+4) {
+		/* 4つで1行になるように幅を計算 (100% / 4) */
+		/* gapの幅を考慮して少し狭めています */
+		flex-basis: calc(25% - 20px);
+	}
+	
+	.realestate-text-content p {
+		font-size: 16px;
+		letter-spacing: 0.2em;
+		margin-bottom: 20px;
+		font-family: "garamond-premier-pro", serif;
+	}
+
+}
+
+@media (max-width: 480px) {
+	.instagram-grid {
+		grid-template-columns: repeat(4, 1fr);
+		gap: 5px;
+	}
+}

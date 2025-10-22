@@ -1,0 +1,215 @@
+/* =================================== */
+/* DEMON-DEMON PAGE
+/* =================================== */
+
+body, h1, h2, p, ul {
+	font-family: "helvetica-neue-lt-pro", sans-serif;
+	font-weight: 400;
+	letter-spacing: 0.1em;
+}
+
+/* トップ画像 */
+.top {
+	width: 100%;
+	height: 450px;
+	background-image: url('../img/demon/top_demon_pc.jpg?2');
+	background-size: cover;
+	background-position: center;
+	margin-top: 30px;
+}
+
+/* コンテンツコンテナ */
+.container {
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 0 20px 200px;
+}
+
+/* ページタイトル */
+.page-title {
+	padding: 80px 0;
+	text-align: center;
+}
+.page-title .page-logo {
+	height: 40px; /* SVGロゴの高さを指定 */
+	width: auto;
+	margin-bottom: 20px;
+}
+.page-title h1 {
+	font-family: "garamond-premier-pro", serif;
+	font-size: 25px;
+	font-weight: 100;
+	letter-spacing: 10px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+.page-title p {
+	font-family: "Shippori Mincho B1", serif;
+	text-align: center;
+	margin-bottom: 40px;
+	font-size: 23px;
+	font-weight: initial;
+	letter-spacing: 10px;
+}
+
+/* 会社概要 */
+.company-profile {
+	padding-bottom: 60px;
+	padding-top: 60px;
+}
+.company-profile h2 {
+	font-size: 20px;
+	margin-bottom: 30px;
+	text-align: center;
+}
+.company-profile dl {
+	max-width: 650px;
+	margin: 0 auto;
+}
+.company-profile dl div {
+	display: flex;
+}
+.company-profile dt {
+	width: 130px;
+	padding: 10px;
+}
+.company-profile .company-name dt{
+	width: auto;
+	padding: 10px;
+}
+
+.company-profile .company-name dd::before{
+	content: none;
+}
+
+.company-profile dd {
+	flex: 1;
+	padding: 10px;
+	margin: 0;
+}
+
+.company-profile dd::before {
+	content: ":";
+	padding-right: 30px;
+}
+
+.company-profile .office dd::before {
+	content: none;
+}
+
+.company-profile .office dd {
+	flex: 1;
+	padding: 10px;
+	margin: 0;
+	line-height: 2rem;
+}
+
+.company-profile .office {
+	margin: 30px 0;
+}
+
+
+/* 業務依頼 */
+.business-request {
+	width: 650px;
+	margin: 0 auto;
+}
+.business-request h3 {
+	font-weight: 400;
+	font-size: initial;
+	margin-bottom: 20px;
+	text-align: left;
+}
+.business-request ul {
+	list-style: inherit;
+	padding: 0;
+	font-size: initial;
+	text-align: left;
+	margin-left: 150px;
+}
+.business-request li {
+	margin-bottom: 10px;
+}
+
+/* =================================== */
+/* DEMON-DEMON PAGE (SP)
+/* Base Breakpoint: 768px
+/* =================================== */
+@media screen and (max-width: 768px) {
+
+	/* トップ画像 */
+	.top {
+		height: 250px; /* スマートフォンでは高さを少し低く調整 */
+		margin-top: 0;
+	}
+
+	/* コンテンツコンテナ */
+	.container {
+		padding: 0 15px 100px; /* 左右の余白を狭く、下の余白も調整 */
+	}
+
+	/* ページタイトル */
+	.page-title {
+		padding: 40px 0; /* 上下の余白を調整 */
+	}
+	.page-title .page-logo {
+		height: 30px; /* ロゴを少し小さく */
+		margin-bottom: 15px;
+	}
+	.page-title h1 {
+		font-size: 20px; /* フォントサイズを調整 */
+		letter-spacing: 5px; /* 文字間を詰める */
+		margin-bottom: 15px;
+	}
+	.page-title p {
+		font-size: 16px; /* フォントサイズを調整 */
+		letter-spacing: 4px; /* 文字間を詰める */
+		line-height: 1.8;
+		margin-bottom: 20px;
+	}
+
+	/* 会社概要 */
+	.company-profile {
+		padding-top: 40px;
+		padding-bottom: 40px;
+	}
+	.company-profile h2 {
+		font-size: 18px; /* フォントサイズを調整 */
+	}
+	.company-profile dl div {
+		flex-direction: column; /* flexの方向を縦に変更し、項目と内容が縦に並ぶようにする */
+		margin-bottom: 15px; /* 各項目の間隔を調整 */
+	}
+	.company-profile dt,
+	.company-profile .company-name dt {
+		width: 100%; /* 横幅を100%に */
+		padding: 0 0 8px; /* 下に少し余白を持たせる */
+		font-weight: bold; /* 項目名を太字にして分かりやすくする */
+	}
+	.company-profile dd {
+		padding: 0; /* 余白をリセット */
+	}
+	/* ddの前の「:」を非表示にする */
+	.company-profile dd::before {
+		content: none;
+	}
+	.company-profile .office {
+		margin: 20px 0;
+	}
+	.company-profile .office dd {
+		line-height: 1.8; /* 行間を調整して読みやすくする */
+	}
+
+	/* 業務依頼 */
+	.business-request {
+		width: 100%; /* 横幅の固定を解除 */
+	}
+	.business-request h3 {
+		text-align: center; /* 中央寄せにして見やすくする */
+		margin-bottom: 25px;
+	}
+	.business-request ul {
+		margin-left: 0; /* 左の余白をリセット */
+		padding-left: 25px; /* リストマーカー（・）の表示領域を確保 */
+	}
+}
