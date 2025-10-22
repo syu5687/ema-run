@@ -185,11 +185,18 @@ body, h1, h2, p, ul {
 		width: 100%; /* 横幅を100%に */
 		padding: 0 0 8px; /* 下に少し余白を持たせる */
 	}
+	
+	.company-profile dt::before {
+		content: ":";
+		padding-left: 30px;
+	}
+	
 	.company-profile dd {
 		padding: 0; /* 余白をリセット */
 	}
 	/* ddの前の「:」を非表示にする */
 	.company-profile dd::before {
+		content: none;
 	}
 	.company-profile .office {
 		margin: 20px 0;
