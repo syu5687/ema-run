@@ -103,6 +103,8 @@
 	position: relative; /* テキストを重ねるための基準 */
 	text-align: center; /* 中のテキストを中央揃え */
 	color: white;
+	width: 1280px;
+	margin: 0 auto;
 }
 
 .realestate-image-wrapper img {
