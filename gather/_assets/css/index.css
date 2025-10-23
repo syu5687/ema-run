@@ -79,11 +79,11 @@
 }
 
 .brand-section .container h2 {
-	text-align: center;
+	font-family: "itc-avant-garde-gothic-pro", sans-serif;
 	font-size: 24px;
 	font-weight: normal;
-	letter-spacing: 0.1em;
-	margin-bottom: 50px; /* ロゴとの余白を少し広げる */
+	letter-spacing: 0.2em;
+	margin-bottom: 20px;
 }
 
 .brand-logos {
