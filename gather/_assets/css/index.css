@@ -235,11 +235,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		
-		background-color: #f8f8f8;
-		border: 1px solid #eee;   
-		
-		transition: all 0.3s ease;
 	}
 	
 	.logo-item img{
