@@ -261,11 +261,19 @@
 		flex-basis: calc(25% - 20px);
 	}
 	
+	.realestate-section {
+		padding: 60px 0 80px;
+	}
+	
 	.realestate-text-content p {
 		font-size: 16px;
 		letter-spacing: 0.2em;
 		margin-bottom: 20px;
 		font-family: "garamond-premier-pro", serif;
+	}
+	
+	.realestate-image-wrapper {
+		width: 100%;
 	}
 
 }
