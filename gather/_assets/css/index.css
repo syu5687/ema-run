@@ -44,13 +44,13 @@
 
 /*インスタグラム*/
 .instagram-section {
-	padding: 60px 40px;
+	padding: 0px 40px;
 	text-align: center;
 }
 
 .instagram-section .container h2 {
 	font-family: "itc-avant-garde-gothic-pro", sans-serif;
-	font-size: 18px;
+	font-size: 24px;
 	font-weight: normal;
 	letter-spacing: 0.2em;
 	margin-bottom: 20px;
@@ -74,7 +74,7 @@
 }
 
 .brand-section {
-	padding: 60px 40px;
+	padding: 0px 40px;
 	background-color: #ffffff;
 }
 
@@ -147,11 +147,6 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-
-	background-color: #f8f8f8; /* 円の背景色（任意） */
-	border: 1px solid #eee;   /* 円の境界線（任意） */
-	
-	transition: all 0.3s ease; /* アニメーション効果 */
 }
 
 /* 円の中に配置するロゴ画像のスタイル */
@@ -159,21 +154,8 @@
 	max-width: 90px;  /* ロゴが円からはみ出さないように調整 */
 	max-height: 90px; /* ロゴが円からはみ出さないように調整 */
 	height: auto;
-	filter: grayscale(100%);
-	opacity: 0.8;
-	transition: all 0.3s ease;
 }
 
-/* マウスカーソルを乗せた時のエフェクト */
-.logo-item:hover {
-	background-color: #fff;
-	border-color: #333;
-}
-
-.logo-item:hover img {
-	filter: grayscale(0%);
-	opacity: 1;
-}
 
 
 @media (max-width: 768px) {
