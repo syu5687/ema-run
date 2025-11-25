@@ -11,7 +11,6 @@ h2{
 	border-radius: 50%;
 	line-height: 6;
 }
-
 h3{
 	font-size: 1.5rem;
 	font-weight: normal;
@@ -33,19 +32,15 @@ h3{
 	width:100%;
 	margin: 50px auto;
 }
-
-
 #contentWrap .main .mainWrap .article .articleWrap section{
 	width:100%;
 	margin: 70px auto;
-
 }
 #contentWrap .main .mainWrap .article .articleWrap .section_001 .sectionWrap .sectionInner,
 #contentWrap .main .mainWrap .article .articleWrap .section_002 .sectionWrap .sectionInner{
 	width: 100%;
 	margin: 30px auto;
 }
-
 #contentWrap .main .mainWrap .article .articleWrap .section_001 .sectionWrap .sectionInner ul,
 #contentWrap .main .mainWrap .article .articleWrap .section_002 .sectionWrap .sectionInner ul{
 	display: flex;
@@ -62,15 +57,12 @@ h3{
 	padding: 30px 10px;
 	align-content: center;
 }
-
 #contentWrap .main .mainWrap .article .articleWrap .section_001 .sectionWrap .sectionInner ul li a{
 	display: flex;
 	flex-direction: row;
-
 }
 #contentWrap .main .mainWrap .article .articleWrap .section_002 .sectionWrap .sectionInner ul li a{
-	display: block;
-	
+	display: block;	
 }
 #contentWrap .main .mainWrap .article .articleWrap .section_001 .sectionWrap .sectionInner ul li a img,
 #contentWrap .main .mainWrap .article .articleWrap .section_002 .sectionWrap .sectionInner ul li a img{
@@ -79,12 +71,11 @@ h3{
 	padding: 0;
 	margin: 0 auto;
 	border: 1px solid #000;
-	
 }
-
 #contentWrap .main .mainWrap .article .articleWrap .section_001 .sectionWrap .sectionInner ul li a picture:nth-child(2){
 	padding-top:30px;
 }
+
 @media (max-width:767px) {
 	#contentWrap .main .mainWrap .article .articleWrap .section_001 .sectionWrap .sectionInner ul,
 	#contentWrap .main .mainWrap .article .articleWrap .section_002 .sectionWrap .sectionInner ul{

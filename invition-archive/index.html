@@ -11,13 +11,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Noto+Serif+JP:wght@200..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./_assets/js/fancybox/jquery.fancybox.css"/>
+
 <link rel="stylesheet" type="text/css" href="./_assets/css/common.css">
+<link rel="stylesheet" type="text/css" href="./_assets/css/lightbox.min.css">
 <link rel="stylesheet" type="text/css" href="./_assets/css/index.css">
 <!-- script -->
 <script type="text/javascript" src="./_assets/js/jquery-3.7.1.min.js"></script>
-<script src="./_assets/js/fancybox/jquery.fancybox.js"></script>
-<script src="./_assets/js/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript" src="./_assets/js/script.js"></script>
 </head>
 
@@ -35,7 +34,7 @@
 								<div class="sectionInner">
 									<ul>
 										<li>
-											<a href="./_assets/img/img001.jpg" data-fancybox data-caption="img001">
+											<a href="./_assets/img/img001.jpg" data-lightbox="card01" data-title="STANDARD">
 											<picture>
 												<source type="image/webp" srcset="./_assets/img/webp/001-1.webp">
 												<source type="image/jpg" srcset="./_assets/img/001-1.jpg">
@@ -49,7 +48,7 @@
 											</a>
 										</li>
 										<li>
-											<a href="./_assets/img/img002.jpg" data-fancybox data-caption="img002">
+											<a href="./_assets/img/img002.jpg" data-lightbox="card01" data-title="YELLOW">
 											<picture>
 												<source type="image/webp" srcset="./_assets/img/webp/002-1.webp">
 												<source type="image/jpg" srcset="./_assets/img/002-1.jpg">
@@ -64,7 +63,7 @@
 										</li>
 
 										<li>
-											<a href="./_assets/img/img003.jpg" data-fancybox data-caption="img003">
+											<a href="./_assets/img/img003.jpg" data-lightbox="card01" data-title="JAPONISM">
 											<picture>
 												<source type="image/webp" srcset="./_assets/img/webp/003-1.webp">
 												<source type="image/jpg" srcset="./_assets/img/003-1.jpg">
@@ -88,7 +87,7 @@
 								<div class="sectionInner">
 									<ul>
 										<li>
-											<a href="./_assets/img/mignon.jpg" data-fancybox02 data-caption="mignon">
+											<a href="./_assets/img/mignon.jpg" data-lightbox="card02" data-title="MIGNON">
 											<picture>
 												<source type="image/webp" srcset="./_assets/img/webp/mignon.webp">
 												<source type="image/jpg" srcset="./_assets/img/mignon.jpg">
@@ -97,7 +96,7 @@
 											</a>
 										</li>
 										<li>
-											<a href="./_assets/img/tale.jpg" data-fancybox02 data-caption="tale">
+											<a href="./_assets/img/tale.jpg" data-lightbox="card02" data-title="TALE">
 											<picture>
 												<source type="image/webp" srcset="./_assets/img/webp/tale.webp">
 												<source type="image/jpg" srcset="./_assets/img/tale.jpg">
@@ -107,7 +106,7 @@
 										</li>
 									
 										<li>
-											<a href="./_assets/img/mignon.jpg" data-fancybox02 data-caption="velt">
+											<a href="./_assets/img/mignon.jpg" data-lightbox="card02" data-title="VELT">
 											<picture>
 												<source type="image/webp" srcset="./_assets/img/webp/velt.webp">
 												<source type="image/jpg" srcset="./_assets/img/velt.jpg">
@@ -127,13 +126,6 @@
 			<p>CopyRight e.m.a co.,ltd</p>
 		</footer>
 	</div>
-	
-	<script>
-	$(document).ready(function() {
-		$('[data-fancybox]').fancybox();
-		$('[data-fancybox02]').fancybox();
-	});
-	</script>
-
+	<script src="./_assets/js/lightbox.min.js"></script>
 </body>
 </html>
