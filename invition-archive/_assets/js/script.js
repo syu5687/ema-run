@@ -5,11 +5,11 @@ const headerBtn=$('.header li a');
 const headerHei= headerBg.outerHeight(); 
 
 $(window).on('scroll',()=>{
-	if($(this).scrollTop()>=100){
-	headerBg.addClass('bgWhitegrad');
-	}else{
-	headerBg.removeClass('bgWhitegrad');
-	}
+	// if($(this).scrollTop()>=100){
+	// headerBg.addClass('bgWhitegrad');
+	// }else{
+	// headerBg.removeClass('bgWhitegrad');
+	// }
 	
 });
 
