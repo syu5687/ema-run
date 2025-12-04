@@ -1,6 +1,16 @@
 @charset "UTF-8";
 /* CSS Document */
-
+#contentWrap{
+	width:100%;
+	font-family: "Cormorant Garamond", "Noto Serif JP", serif;
+	background-image:url('../img/bg.jpg');
+	background-size:cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center center;
+	margin-top:0.1px;
+	padding: 0;
+}
 h2{
 	font-size: 2rem;
 	font-weight: normal;
@@ -29,16 +39,7 @@ h3{
 	font-size: 1.5rem;
 	font-weight: normal;
 }
-#contentWrap{
-	width:100%;
-	font-family: "Cormorant Garamond", "Noto Serif JP", serif;
-	background-image:url('../img/bg.jpg');
-	background-size:cover;
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-position: center center;
-	
-}
+
 .header{
 	position: fixed;
 	width: 100%;
