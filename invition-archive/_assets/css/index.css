@@ -72,6 +72,13 @@ h3{
 	right: 0;
 	box-shadow: 0px 10px 10px -5px rgba(200,200,200,.5);
 }
+.header>div{
+	display: flex;
+	justify-content: space-between;
+}
+.logo{
+	
+}
 .bgWhitegrad{
 	background-color:transparent;
 	background-image: linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4) 20%, rgba(255, 255, 255, 0.8) 60%, rgba(255, 255, 255, 1) 95%);
