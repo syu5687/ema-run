@@ -110,7 +110,7 @@ h3{
 }
 #contentWrap .main .mainWrap .article .articleWrap{
 	width:100%;
-	margin: 50px auto;
+	/* margin: 50px auto; */
 }
 #contentWrap .main .mainWrap .article .articleWrap section{
 	width:100%;
