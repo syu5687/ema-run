@@ -1,5 +1,6 @@
 @charset "UTF-8";
 /* CSS Document */
+
 h2{
 	font-size: 2rem;
 	font-weight: normal;
@@ -11,6 +12,19 @@ h2{
 	border-radius: 50%;
 	line-height: 6;
 }
+h2.undline{
+	width: 80%;
+	line-height:1.5;
+	margin:0 auto;
+	height:auto;
+	border-radius: 0;
+	border: none;
+	border-left:10px solid #333;
+	font-size: 2.5rem;
+	text-align: left;
+	padding-left: 1rem;
+
+}
 h3{
 	font-size: 1.5rem;
 	font-weight: normal;
@@ -18,11 +32,18 @@ h3{
 #contentWrap{
 	width:100%;
 	font-family: "Cormorant Garamond", "Noto Serif JP", serif;
+	background-image:url('../img/bg.jpg');
+	background-size:cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center center;
+	
 }
-	.header{
+.header{
 	position: fixed;
 	width: 100%;
-  background-image: linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4) 20%, rgba(255, 255, 255, 0.8) 60%, rgba(255, 255, 255, 1) 95%);
+	background-color: white;
+	background-image: none;
 	text-align: center;
 	height: 100px;
 	align-content: center;
@@ -31,6 +52,30 @@ h3{
 	left: 0;
 	right: 0;
 }
+.bgWhitegrad{
+	background-color:transparent;
+	background-image: linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4) 20%, rgba(255, 255, 255, 0.8) 60%, rgba(255, 255, 255, 1) 95%);
+}
+.header ul{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	font-size: 1rem;
+	height: 80%;
+	align-items: center;
+	padding: 0 30px;
+	box-shadow: 0px 10px 10px -5px rgba(200,200,200,.5);
+}
+.header li{
+	display: flex;
+	justify-content: space-between;
+	padding: 0 15px 0 0;
+}
+.header li:nth-child(2n)::before{
+	content: "/";
+	padding: 0 15px 0 0;
+}
+
 .header a,
 .header a:hover{
 	text-decoration: none;
@@ -39,6 +84,9 @@ h3{
 	display: block;
 	width: 100%;
 	color: #fff;
+}
+.header li a{
+	color: #333;
 }
 .header a span{
 	display: block;
@@ -52,7 +100,9 @@ h3{
 	width:100%;
 }
 #contentWrap .main .mainWrap{
-	width:100%;
+	width:80%;
+	margin:0 auto;
+	background-color:white;
 }
 #contentWrap .main .mainWrap .article{
 	width:100%;
@@ -64,6 +114,14 @@ h3{
 #contentWrap .main .mainWrap .article .articleWrap section{
 	width:100%;
 	margin: 70px auto;
+}
+#contentWrap .main .mainWrap .article .articleWrap .section_000 .sectionWrap .sectionInner{
+	width: 80%;
+	margin:30px auto;
+}
+#contentWrap .main .mainWrap .article .articleWrap .section_000 .sectionWrap .sectionInner p{
+	padding:0 10px;
+	font-size: 1rem;
 }
 #contentWrap .main .mainWrap .article .articleWrap .section_001 .sectionWrap .sectionInner,
 #contentWrap .main .mainWrap .article .articleWrap .section_002 .sectionWrap .sectionInner{
@@ -106,6 +164,14 @@ h3{
 }
 
 @media (max-width:767px) {
+	h2.undline{
+		width: 95%;
+	}
+	.header ul{
+		justify-content: center;
+		padding: 0 10px;
+	}
+
 	#contentWrap .main .mainWrap .article .articleWrap .section_001 .sectionWrap .sectionInner ul,
 	#contentWrap .main .mainWrap .article .articleWrap .section_002 .sectionWrap .sectionInner ul{
 		flex-direction: column;

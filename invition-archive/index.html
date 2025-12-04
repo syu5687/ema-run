@@ -13,19 +13,54 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Noto+Serif+JP:wght@200..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="./_assets/css/lightbox.min.css">
 <link rel="stylesheet" type="text/css" href="./_assets/css/common.css">
-<link rel="stylesheet" type="text/css" href="./_assets/css/index.css">
+<link rel="stylesheet" type="text/css" href="./_assets/css/index.css?1">
 
 <!-- script -->
 <script type="text/javascript" src="./_assets/js/jquery-3.7.1.min.js"></script>
-<script type="text/javascript" src="./_assets/js/script.js"></script>
-</head>
 
+</head>
 <body>
 	<div id="contentWrap">
-		<header class="header" style="display: none;"></header>
+		<header class="header">
+			<ul>
+				<li><a href="#about">機能紹介</a></li>
+				<li><a href="#design">デザイン一覧</a></li>
+			</ul>
+		</header>
 		<main class="main">
 			<div class="mainWrap">
-				<article class="article">
+				<article class="article" id="about">
+					<div class="articleWrap">
+						<h2>機能紹介</h2>
+						<section class="section_000">
+							
+							<div class="sectionWrap">
+								<div class="sectionInner">
+									<h3>LINEで招待状が送れる</h3>
+									<p>LINEで友達に招待状を送付。
+									他にもQRコードやURLも発行できるので、LINEをやっていない方にも
+									メールで送れる！</p>
+								</div>
+								<div class="sectionInner">
+									<h3>ゲストからの回答を一気に確認</h3>
+									<p>ログインして随時確認！
+										ゲストからの情報を一括管理で、出欠確認が一目瞭然。漏れがなくて安心！</p>
+								</div>
+								<div class="sectionInner">
+									<h3>動画や写真も載せれる</h3>
+									<p>もちろん載せたくないときは、テキストだけのデザインもあります！</p>
+								</div>
+								<div class="sectionInner">
+									<h3>名前と挙式日だけ即発行</h3>
+									<p>定型文もありますので、文章を考えるのが面倒な方は
+										名前と挙式日だけでもOK！<br>
+										あとから変更することもできます！</p>
+								</div>
+							</div>
+						</section>
+					</div>
+				</article>
+				<article class="article" id="design">
 					<div class="articleWrap">
 						<h2>招待状一覧</h2>
 						<section class="section_001">
@@ -135,5 +170,6 @@
 		  // fitImagesInViewport:'true',
 		});
 	</script>
+	<!-- <script type="text/javascript" src="./_assets/js/script.js"></script> -->
 </body>
 </html>
