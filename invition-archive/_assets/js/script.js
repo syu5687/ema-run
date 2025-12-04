@@ -13,13 +13,15 @@ $(window).on('scroll',()=>{
 	
 });
 
-$(headerBtn).on('click',()=>{
-	//$(mainContent).scrollTop(200);
-	//const aniSpeed=500;
-	//const nextTo=0;
-	//const href=$(this).attr('href');
-	//const target=$(href=='#'||href==''?'html':href);
-	//const posi=target.offset().top+100;
-	//console.log("hello");
-})
+headerBtn.on('click',function(e){
+	e.preventDefault();
+	const aniSpeed=500;
+	const href=$(this).attr('href');
+	const target=href==='#'||href===''?$('html'):$(href);
+	if(!target.length)return;
+	const posi=target.offset().top-0;
+	$('html,body').animate({
+		scrollTop:posi
+	},aniSpeed);
+});
 });
