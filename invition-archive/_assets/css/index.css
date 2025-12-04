@@ -99,14 +99,16 @@ h3{
 }
 #contentWrap .main{
 	width:100%;
+	padding:100px 0;
 }
 #contentWrap .main .mainWrap{
 	width:80%;
-	margin:0 auto;
+	margin:30px auto 0;
 	background-color:white;
 }
 #contentWrap .main .mainWrap .article{
 	width:100%;
+	padding:20px 0;
 }
 #contentWrap .main .mainWrap .article .articleWrap{
 	width:100%;
