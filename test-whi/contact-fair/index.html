@@ -29,9 +29,10 @@ LINEで相談する
   
 	// URL の ?fair_id=... を読み取り、hidden 項目にセットする
 	// （静的サイトはブラウザ側でしかクエリを読めないため、ここで行う）
-	const fairId = new URLSearchParams(location.search).get("fair_id") || "";
+	const rawFairId = new URLSearchParams(location.search).get("fair_id") || "";
+	  const fairId = rawFairId.replace(/\/+$/, ""); // 末尾のスラッシュを除去してIDとして使う
 	  const fairIdInput = document.getElementById("fairId");
-	  if (fairIdInput) fairIdInput.value = fairId;
+	  if (fairIdInput) fairIdInput.value = fairId; // 送信値も正規化後のIDにする
 	
 	  // フェアIDから表示名を引き、見つかれば画面に出す（無ければ隠したまま）
 	  const fairName = fairNames[fairId] || "";

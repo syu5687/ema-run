@@ -27,9 +27,10 @@ LINEで相談する
   // 段階2でデプロイした Worker のURL。自分の workers.dev のURLに置き換える
   const ENDPOINT = "https://whitehouse-imari-contact-worker.matsufuji.workers.dev";  
   const planNames = JSON.parse(document.getElementById("planNamesData")?.textContent || "{}");
-	const planId = new URLSearchParams(location.search).get("plan_id") || "";
+const rawPlanId = new URLSearchParams(location.search).get("plan_id") || "";
+	const planId = rawPlanId.replace(/\/+$/, ""); // 末尾のスラッシュを除去してIDとして使う
 	const planIdInput = document.getElementById("planId");
-	if (planIdInput) planIdInput.value = planId;
+	if (planIdInput) planIdInput.value = planId; // 送信値も正規化後のIDにする
 	const planName = planNames[planId] || "";
 	  const targetEl = document.getElementById("contactTarget");
 	  if (targetEl && fairName) {
